@@ -1,10 +1,12 @@
 {
-  "name": "puppet-fts",
+  "name": "fts",
   "version": "0.1.0",
   "author": "BradipoEremita",
   "summary": "A puppet module to install and configure FTS created by Michele Delli Veneri and Francesco Di Nuccy",
-  "license": "proprietary",
-  "source": "",
+  "license": "MIT",
+  "source": "https://github.com/MicheleDelliVeneri/puppet-fts",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-concat",
+  "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
   "dependencies": [
       {
         "name": "puppetlabs/stdlib",
