@@ -1,0 +1,91 @@
+{
+  "name": "puppet-fts",
+  "version": "0.1.0",
+  "author": "BradipoEremita",
+  "summary": "A puppet module to install and configure FTS created by Michele Delli Veneri and Francesco Di Nuccy",
+  "license": "proprietary",
+  "source": "",
+  "dependencies": [
+      {
+        "name": "puppetlabs/stdlib",
+        "version_requirement": "9.4.0"
+      },
+      {
+        "name": "puppet/cron",
+        "version_requirement": "4.1.0"
+      },
+      {
+        "name": "puppet/selinux",
+        "version_requirement": "4.0.0"
+      },
+      {
+        "name": "puppetlabs/inifile",
+        "version_requirement": "6.1.0"
+      },
+      {
+        "name": "puppetl/systemd",
+        "version_requirement": "6.0.0"
+      },
+      {
+        "name": "puppetlabs/firewall",
+        "version_requirement": "7.0.2"
+      },
+      {
+        "name": "puppet/yum",
+        "version_requirement": "7.1.0"
+      },
+      {
+        "name": "puppetlabs/apache",
+        "version_requirement": "11.1.0"
+      },
+      {
+        "name": "puppetlabs/mysql",
+        "version_requirement": "15.0.0"
+      },
+      {
+        "name": "bradipoeremita/concat",
+        "version_requirement": "9.0.0"
+      },
+      {
+        "name": "cnafsd/voms",
+        "version_requirement": "0.8.0"
+      }
+
+
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "Scientific",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 7.24 < 9.0.0"
+    }
+  ],
+  "pdk-version": "3.0.0",
+  "template-url": "pdk-default#3.0.0",
+  "template-ref": "tags/3.0.0-0-g056e50d"
+}
