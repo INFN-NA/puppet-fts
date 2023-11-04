@@ -10,12 +10,8 @@ information to include in your README.
 
 1. [Description](#description)
 1. [Setup - The basics of getting started with fts](#setup)
-    * [What fts affects](#what-fts-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with fts](#beginning-with-fts)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
+1. [Usage - Configuration options](#usage)
+1. [Limitations - OS compatibility](#limitations)
 
 ## Description
 
