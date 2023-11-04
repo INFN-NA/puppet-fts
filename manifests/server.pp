@@ -88,6 +88,7 @@ class fts::server (
     ['fts-msg', 'fts-infosys']:
       ;
   }
+  include fts::client
   file { '/etc/httpd/conf.d/fts3rest.conf':
     ensure  => file,
     owner   => 'root',
