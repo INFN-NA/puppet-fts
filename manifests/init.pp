@@ -125,13 +125,17 @@ class fts (
     '/etc/yum.repos.d/fts3-depend-el7.repo':
       source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo',
       ;
+    # EGI Trust Anchors
+    'etc/yum.repos.d/EGI-trustanchors.repo':
+      source => '///modules/fts/EGI-trustanchors.repo',
+      ;
   }
   include yum
   package {
     default:
       ensure   => present,
       provider => yum,
-      require  => File['/etc/yum.repos.d/fts3-depend-el7.repo'],
+      require  => [File['/etc/yum.repos.d/fts3-depend-el7.repo'], File['/etc/yum.repos.d/EGI-trustanchors.repo']],
       ;
 
     # CentOS SCLo SIG software
