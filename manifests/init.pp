@@ -155,7 +155,7 @@ class fts (
   }
 
   include voms
-
+  include voms::atlas
   voms::vo { 'cygno.vo':
     servers => [
       {
