@@ -126,7 +126,7 @@ class fts (
       source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo',
       ;
     # EGI Trust Anchors
-    'etc/yum.repos.d/EGI-trustanchors.repo':
+    '/etc/yum.repos.d/EGI-trustanchors.repo':
       source => 'puppet///modules/fts/EGI-trustanchors.repo',
       ;
   }
