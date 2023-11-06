@@ -126,7 +126,7 @@ class fts (
       source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo',
       ;
   }
-  file{ '/etc/yum.repos.d/EGI-trustanchors.repo':
+  file { '/etc/yum.repos.d/EGI-trustanchors.repo':
     ensure => file,
     owner  => 'root',
     group  => 'root',
