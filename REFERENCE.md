@@ -6,34 +6,18 @@
 
 ### Classes
 
-* [`fts`](#fts): This class installs and configures the FTS3 server and database.
+* [`fts`](#fts): This class installs the FTS3 server and configures it to run as a service.
+It can also install the MySQL server and create the FTS3 database.
+The class can be used to configure only the FTS3 server, only the MySQL server, or both.
 * [`fts::client`](#fts--client): This class isntall the FTS client
 * [`fts::database`](#fts--database): @summary: this class configures the fts database  === Parameters: (required) the password for the fts database user  (required) the name of t
-* [`fts::server`](#fts--server): }  ==== Parameters
+* [`fts::server`](#fts--server): This class defines the configuration for the FTS server.
+It takes in parameters for configuring the server and sets up the necessary resources.
 
 ## Classes
 
 ### <a name="fts"></a>`fts`
 
-This class installs the FTS3 server and configures it to run as a service.
-It can also install the MySQL server and create the FTS3 database.
-The class can be used to configure only the FTS3 server, only the MySQL server, or both.
-
-  class { 'fts':
-    fts_host           => 'fts3-server.example.org',
-    db_host            => 'fts3-db.example.org',
-    db_root_password   => 'ftstestpassword',
-    fts_db_user        => 'fts3',
-    fts_db_type        => 'mysql',
-    fts_server_alias   => 'fts3-server',
-    admin_list         => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
-    fts_db_threads_num => 24,
-    configure_db       => true,
-    configure_fts      => true,
-    configure_firewall => true,
-    configure_lsc      => true,
-    vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
-  }
 === Parameters:
 
 #### Examples
@@ -41,7 +25,21 @@ The class can be used to configure only the FTS3 server, only the MySQL server, 
 ##### 
 
 ```puppet
-include fts
+class { 'fts':
+  fts_host           => 'fts3-server.example.org',
+  db_host            => 'fts3-db.example.org',
+  db_root_password   => 'ftstestpassword',
+  fts_db_user        => 'fts3',
+  fts_db_type        => 'mysql',
+  fts_server_alias   => 'fts3-server',
+  admin_list         => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
+  fts_db_threads_num => 24,
+  configure_db       => true,
+  configure_fts      => true,
+  configure_firewall => true,
+  configure_lsc      => true,
+  vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
+}
 ```
 
 #### Parameters
@@ -302,6 +300,21 @@ Default value: `true`
 }
 
 ==== Parameters
+
+#### Examples
+
+##### 
+
+```puppet
+class { 'fts::server':
+  fts_user => 'fts3',
+  fts_db_type => 'mysql',
+  fts_db_username => 'root',
+  fts_db_password => 'ftstestpassword',
+  fts_db_threads_num => 24,
+  fts_server_alias => 'fts3-server',
+  configure_firewall => true,
+```
 
 #### Parameters
 
