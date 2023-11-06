@@ -52,8 +52,8 @@ class fts::server (
   String  $fts_server_alias         = 'fts3-server',
   Boolean $configure_firewall       = true,
 ) {
-  $fts_db_connection_string = "${fts_db}:3306/${fts_user}"
-  include cron
+  $fts_db_connection_string = "${db_host}:3306/${fts_user}"
+  #include cron
   class { 'selinux':
     mode => 'enforcing',
   }
