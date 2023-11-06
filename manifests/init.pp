@@ -154,78 +154,77 @@ class fts (
       ;
   }
 
-  include voms::atlas
+  #include voms::atlas
 
-  voms::vo { 'cygno.vo':
-    servers => [
-      {
-        server => 'voms-cygno.cloud.cnaf.infn.it',
-        port   => 15006,
-        dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
-        ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-      },
-    ],
-  }
-
-  # # Configure the VOMS VOs
-  # if $configure_lsc {
-  #   include voms
-  #   $vo_list.each |$vo| {
-  #     case $vo {
-  #       'alice': {
-  #         include voms::alice
-  #       }
-  #       'atlas': {
-  #         include voms::atlas
-  #       }
-  #       'cms': {
-  #         include voms::cms
-  #       }
-  #       'cygno': {
-  #         voms::vo { 'cygno.vo':
-  #           servers => [
-  #             {
-  #               server => 'voms-cygno.cloud.cnaf.infn.it',
-  #               port   => 15006,
-  #               dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
-  #               ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-  #             }
-  #           ]
-  #         }
-  #       }
-  #       'datacloud': {
-  #         voms::vo { 'datacloud.vo':
-  #           servers => [
-  #             {
-  #               server => 'iam-aa.wp6.cloud.infn.it',
-  #               port   => 15000,
-  #               dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-aa.wp6.cloud.infn.it',
-  #               ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-  #             }
-  #           ]
-  #         }
-  #       }
-  #       'dteam': {
-  #         include voms::dteam
-  #       }
-  #       'escape': {
-  #         include voms::escape
-  #       }
-  #       'lhcb': {
-  #         include voms::lhcb
-  #       }
-  #       'ops': {
-  #         include voms::ops
-  #       }
-  #       'wlcg': {
-  #         include voms::wlcg
-  #       }
-  #       default: {
-  #         warning("Unknown VO: ${vo}")
-  #       }
-  #     }
-  #   }
+  # voms::vo { 'cygno.vo':
+  #   servers => [
+  #     {
+  #       server => 'voms-cygno.cloud.cnaf.infn.it',
+  #       port   => 15006,
+  #       dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
+  #       ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+  #     },
+  #   ],
   # }
+
+  # Configure the VOMS VOs
+  if $configure_lsc {
+    $vo_list.each |$vo| {
+      case $vo {
+        'alice': {
+          include voms::alice
+        }
+        'atlas': {
+          include voms::atlas
+        }
+        'cms': {
+          include voms::cms
+        }
+        'cygno': {
+          voms::vo { 'cygno.vo':
+            servers => [
+              {
+                server => 'voms-cygno.cloud.cnaf.infn.it',
+                port   => 15006,
+                dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
+                ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+              }
+            ]
+          }
+        }
+        'datacloud': {
+          voms::vo { 'datacloud.vo':
+            servers => [
+              {
+                server => 'iam-aa.wp6.cloud.infn.it',
+                port   => 15000,
+                dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-aa.wp6.cloud.infn.it',
+                ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+              }
+            ]
+          }
+        }
+        'dteam': {
+          include voms::dteam
+        }
+        'escape': {
+          include voms::escape
+        }
+        'lhcb': {
+          include voms::lhcb
+        }
+        'ops': {
+          include voms::ops
+        }
+        'wlcg': {
+          include voms::wlcg
+        }
+        default: {
+          warning("Unknown VO: ${vo}")
+        }
+      }
+    }
+  }
 
   # if $configure_fts {
   #   # Install the FTS3 server
