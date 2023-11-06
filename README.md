@@ -14,15 +14,27 @@ on a couple of Hosts.
 
 ## Setup
 
-```
-puppet module install infn-na-fts
-```
+* Setup two machines with CentOS 7 (puppet agents, not constrained to CentOS 7);
+* Install puppet agent on both machines:
+    1. add the puppet repo `rpm -Uvh https://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm`;
+    2. install the puppet agent and vim packages (`yum install -y puppet-agent vim`)
+    3. Reload your /etc/profile to update $PATH or run puppet agent by absolute path
+    4. create the `certificates` folder in the root path and copy there your site `hostcert.pem` and `hostkey.pem`;
+* Employ the `fts` class to configure the FTS server and the MySQL database on the nodes, see the `fts=db.pp` and `fts-server.pp` in examples for some reference;
+* execute `puppet agent -t -v` on both servers (db first, fts server second);
+* execute `fetch-crl` (it is possible to use `-p` parameter to parallelize download);
+* restart httpd: `systemctl restart httpd`
+## Test your installation
+1. Check your monitoring webpage at `https://{fts_fqdn}:8449/fts3/ftsmon/#/`;
+2. Execute the following command on your server ` curl --capath /etc/grid-security/certificates -E /etc/grid-security/hostcert.pem --key /etc/grid-security/hostkey.pem https://hostname:8446/whoami`;
 
 ## Usage
 The module can be used to configure both the database and fts server on the same machine, or on two different
 machines. For the latter use case, to configure the fts server only, set `configure_db` to false, and to configure
-the mysql database only, set `configure_fts` to false. 
-```
+the mysql database only, set `configure_fts` to false. Check the examples to see two .pp files configuring both the server
+and the database.
+
+``` .puppet
 # On the fts server 
 fts {'creating-fts-server'
     fts_host           => 'fts3-server.example.org',
