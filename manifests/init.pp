@@ -92,7 +92,7 @@ class fts (
   String  $fts_db_type        = 'mysql',
   String  $fts_server_alias   = 'fts3-server',
   Array   $admin_list         = ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
-  Int     $fts_db_threads_num = 24,
+  Integer $fts_db_threads_num = 24,
   Boolean $configure_db       = true,
   Boolean $configure_fts      = true,
   Boolean $configure_firewall = true,

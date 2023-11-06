@@ -48,7 +48,7 @@ class fts::server (
   String  $db_host                   = 'fts-db.infn.it',
   String  $fts_db_username          = 'root',
   String  $fts_db_password          = 'ftstestpassword',
-  Int     $fts_db_threads_num       = 24,
+  Integer $fts_db_threads_num       = 24,
   String  $fts_server_alias         = 'fts3-server',
   Boolean $configure_firewall       = true,
 ) {
