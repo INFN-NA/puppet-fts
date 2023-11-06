@@ -7,6 +7,7 @@
 #     fts_user => 'fts3',
 #     fts_db_type => 'mysql',
 #     fts_db_username => 'root',
+#     fts_db_name => 'fts',
 #     fts_db_password => 'ftstestpassword',
 #     fts_db_threads_num => 24,
 #     fts_server_alias => 'fts3-server',
@@ -27,6 +28,7 @@
 #
 # @param fts_db_name
 #   The name of the database to use
+#
 # @param fts_db_password
 #   The password to use to connect to the database
 #

@@ -323,6 +323,7 @@ The following parameters are available in the `fts::server` class:
 * [`fts_db_type`](#-fts--server--fts_db_type)
 * [`db_host`](#-fts--server--db_host)
 * [`fts_db_username`](#-fts--server--fts_db_username)
+* [`fts_db_name`](#-fts--server--fts_db_name)
 * [`fts_db_password`](#-fts--server--fts_db_password)
 * [`fts_db_threads_num`](#-fts--server--fts_db_threads_num)
 * [`fts_server_alias`](#-fts--server--fts_server_alias)
@@ -359,6 +360,12 @@ Data type: `String`
 The username to use to connect to the database
 
 Default value: `'root'`
+
+##### <a name="-fts--server--fts_db_name"></a>`fts_db_name`
+
+Data type: `String`
+
+The name of the database to use
 
 ##### <a name="-fts--server--fts_db_password"></a>`fts_db_password`
 
