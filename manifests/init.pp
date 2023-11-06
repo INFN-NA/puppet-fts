@@ -154,89 +154,89 @@ class fts (
       ;
   }
 
-  # Configure the VOMS VOs
-  if $configure_lsc {
-    include voms
-    $vo_list.each |$vo| {
-      case $vo {
-        'alice': {
-          include voms::alice
-        }
-        'atlas': {
-          include voms::atlas
-        }
-        'cms': {
-          include voms::cms
-        }
-        'cygno': {
-          voms::vo { 'cygno.vo':
-            servers => [
-              {
-                server => 'voms-cygno.cloud.cnaf.infn.it',
-                port   => 15006,
-                dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
-                ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-              }
-            ]
-          }
-        }
-        'datacloud': {
-          voms::vo { 'datacloud.vo':
-            servers => [
-              {
-                server => 'iam-aa.wp6.cloud.infn.it',
-                port   => 15000,
-                dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-aa.wp6.cloud.infn.it',
-                ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-              }
-            ]
-          }
-        }
-        'dteam': {
-          include voms::dteam
-        }
-        'escape': {
-          include voms::escape
-        }
-        'lhcb': {
-          include voms::lhcb
-        }
-        'ops': {
-          include voms::ops
-        }
-        'wlcg': {
-          include voms::wlcg
-        }
-        default: {
-          warning("Unknown VO: ${vo}")
-        }
-      }
-    }
-  }
+  # # Configure the VOMS VOs
+  # if $configure_lsc {
+  #   include voms
+  #   $vo_list.each |$vo| {
+  #     case $vo {
+  #       'alice': {
+  #         include voms::alice
+  #       }
+  #       'atlas': {
+  #         include voms::atlas
+  #       }
+  #       'cms': {
+  #         include voms::cms
+  #       }
+  #       'cygno': {
+  #         voms::vo { 'cygno.vo':
+  #           servers => [
+  #             {
+  #               server => 'voms-cygno.cloud.cnaf.infn.it',
+  #               port   => 15006,
+  #               dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
+  #               ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+  #             }
+  #           ]
+  #         }
+  #       }
+  #       'datacloud': {
+  #         voms::vo { 'datacloud.vo':
+  #           servers => [
+  #             {
+  #               server => 'iam-aa.wp6.cloud.infn.it',
+  #               port   => 15000,
+  #               dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-aa.wp6.cloud.infn.it',
+  #               ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+  #             }
+  #           ]
+  #         }
+  #       }
+  #       'dteam': {
+  #         include voms::dteam
+  #       }
+  #       'escape': {
+  #         include voms::escape
+  #       }
+  #       'lhcb': {
+  #         include voms::lhcb
+  #       }
+  #       'ops': {
+  #         include voms::ops
+  #       }
+  #       'wlcg': {
+  #         include voms::wlcg
+  #       }
+  #       default: {
+  #         warning("Unknown VO: ${vo}")
+  #       }
+  #     }
+  #   }
+  # }
 
-  if $configure_fts {
-    # Install the FTS3 server
-    class { 'fts::server':
-      fts_user           => $fts_db_user,
-      fts_db_type        => $fts_db_type,
-      fts_db             => $db_host,
-      fts_db_username    => $fts_db_user,
-      fts_db_password    => $db_root_password,
-      fts_db_threads_num => $fts_db_threads_num,
-      fts_server_alias   => $fts_server_alias,
-      configure_firewall => $configure_firewall,
-    }
-  }
+  # if $configure_fts {
+  #   # Install the FTS3 server
+  #   class { 'fts::server':
+  #     fts_user           => $fts_db_user,
+  #     fts_db_type        => $fts_db_type,
+  #     fts_db             => $db_host,
+  #     fts_db_username    => $fts_db_user,
+  #     fts_db_password    => $db_root_password,
+  #     fts_db_threads_num => $fts_db_threads_num,
+  #     fts_server_alias   => $fts_server_alias,
+  #     configure_firewall => $configure_firewall,
+  #   }
+  # }
 
-  # Install the MySQL server and configure the FTS3 database
-  if $configure_db {
-    class { 'fts::db':
-      db_password        => $db_root_password,
-      db_name            => $db_name,
-      fts_host           => $fts_host,
-      fts_db_user        => $fts_db_user,
-      admin_list         => $admin_list,
-      configure_firewall => $configure_firewall,
-    }
-  }
+  # # Install the MySQL server and configure the FTS3 database
+  # if $configure_db {
+  #   class { 'fts::db':
+  #     db_password        => $db_root_password,
+  #     db_name            => $db_name,
+  #     fts_host           => $fts_host,
+  #     fts_db_user        => $fts_db_user,
+  #     admin_list         => $admin_list,
+  #     configure_firewall => $configure_firewall,
+  #   }
+  # }
 }
