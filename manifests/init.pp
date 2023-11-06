@@ -156,6 +156,7 @@ class fts (
 
   # Configure the VOMS VOs
   if $configure_lsc {
+    include voms
     $vo_list.each |$vo| {
       case $vo {
         'alice': {
