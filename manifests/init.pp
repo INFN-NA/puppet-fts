@@ -229,7 +229,7 @@ class fts (
 
   # Install the MySQL server and configure the FTS3 database
   if $configure_db {
-    class { 'fts::db':
+    class { 'fts::database':
       db_password        => $db_root_password,
       db_name            => $db_name,
       fts_host           => $fts_host,
