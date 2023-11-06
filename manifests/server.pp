@@ -18,28 +18,28 @@
 # }
 #
 # ==== Parameters
-# [*fts_user*] (string)
+# @param fts_user
 #   The user that will run the FTS server
 # 
-# [*fts_db_type*] (string)
+# @param fts_db_type
 #   The type of database backend to use
 #
-# [*db_host*] (string)
+# @param db_host
 #   The hostname of the database server
 #
-# [*fts_db_username*] (string)
+# @param fts_db_username
 #   The username to use to connect to the database
 #
-# [*fts_db_password*] (string)
+# @param fts_db_password
 #   The password to use to connect to the database
 #
-# [*fts_db_threads_num*] (integer)
+# @param fts_db_threads_num
 #   The number of threads to use for the database backend
 #
-# [*fts_server_alias*] (string)
+# @param fts_server_alias
 #   The alias to use for the FTS server
 #
-# [*configure_firewall*] (boolean)
+# @param configure_firewall
 #   Whether to configure the firewall or not
 #
 class fts::server (

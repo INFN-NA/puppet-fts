@@ -23,61 +23,61 @@
 #   }
 # === Parameters:
 # 
-# [*fts_host*]
+# @param fts_host
 #   (required) The hostname of the FTS3 server.
 #   Defaults to the value of $::fqdn.
 #   The value of this parameter is used to set the FTS3 server hostname in the
 #   MySQL database.
 #
-# [*db_host*]
+# @param db_host
 #   (required) The hostname of the FTS3 database.
 #   Defaults to the value of $::fqdn.
 #   The value of this parameter is used to set the FTS3 database hostname in the FTS3 
 #   configuration file.
 #
-# [*db_name*]
+# @param db_name
 #   (required) The name of the FTS3 database.
 #   Defaults to 'fts'.
 #
-# [*db_root_password*]
+# @param db_root_password
 #   (required) The password of the MySQL root user.
 #
-# [*fts_db_user*]
+# @param fts_db_user
 #   (optional) The username of the FTS3 database.
 #   Defaults to 'fts3'.
 #
-# [*fts_db_type*]
+# @param fts_db_type
 #   (optional) The type of the FTS3 database.
 #   Defaults to 'mysql'.
 #
-# [*fts_server_alias*]
+# @param fts_server_alias
 #   (optional) The alias of the FTS3 server.
 #   Defaults to 'fts3-server'.
 #
-# [*admin_list*]
+# @param admin_list
 #   (optional) List of DNs of the FTS3 administrators.
 #   Defaults to ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri]
 #
-# [*fts_db_threads_num*]
+# @param fts_db_threads_num
 #   (optional) The number of threads to use for the FTS3 database.
 #   Defaults to 24.
 #
-# [*configure_fts*]
+# @param configure_fts
 #   (optional) Whether to configure the FTS3 server.
 #
-# [*configure_db*]
+# @param configure_db
 #   (optional) Whether to configure the FTS3 database.
 #   Defaults to true.
 #
-# [*configure_firewall*]
+# @param configure_firewall
 #   (optional) Whether to configure the firewall.
 #   Defaults to true.
 #
-# [*configure_lsc*]
+# @param configure_lsc
 #   (optional) Whether to install and configure the servers as VOMS clients.
 #   Defaults to true.
 #
-# [*vo_list*]
+# @param vo_list
 #   (optional) List of VOs to configure. Add the VOs to the list.
 #   Possible values are 'alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 
 #     'escape', 'lhcb', 'ops', 'wlcg'

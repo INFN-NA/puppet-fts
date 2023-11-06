@@ -8,8 +8,8 @@
 
 * [`fts`](#fts): This class installs and configures the FTS3 server and database.
 * [`fts::client`](#fts--client): This class isntall the FTS client
-* [`fts::database`](#fts--database): @Summary: this class configures the fts database  === Parameters: [*db_password*] (required) the password for the fts database user  [*db_nam
-* [`fts::server`](#fts--server): }  ==== Parameters [*fts_user*] (string)   The user that will run the FTS server  [*fts_db_type*] (string)   The type of database backend to 
+* [`fts::database`](#fts--database): @summary: this class configures the fts database  === Parameters: (required) the password for the fts database user  (required) the name of t
+* [`fts::server`](#fts--server): }  ==== Parameters
 
 ## Classes
 
@@ -26,6 +26,7 @@ The class can be used to configure only the FTS3 server, only the MySQL server, 
     fts_db_user        => 'fts3',
     fts_db_type        => 'mysql',
     fts_server_alias   => 'fts3-server',
+    admin_list         => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
     fts_db_threads_num => 24,
     configure_db       => true,
     configure_fts      => true,
@@ -34,66 +35,6 @@ The class can be used to configure only the FTS3 server, only the MySQL server, 
     vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
   }
 === Parameters:
-
-[*fts_host*]
-  (required) The hostname of the FTS3 server.
-  Defaults to the value of $::fqdn.
-  The value of this parameter is used to set the FTS3 server hostname in the
-  MySQL database.
-
-[*db_host*]
-  (required) The hostname of the FTS3 database.
-  Defaults to the value of $::fqdn.
-  The value of this parameter is used to set the FTS3 database hostname in the FTS3
-  configuration file.
-
-[*db_name*]
-  (required) The name of the FTS3 database.
-  Defaults to 'fts'.
-
-[*db_root_password*]
-  (required) The password of the MySQL root user.
-
-[*fts_db_user*]
-  (optional) The username of the FTS3 database.
-  Defaults to 'fts3'.
-
-[*fts_db_type*]
-  (optional) The type of the FTS3 database.
-  Defaults to 'mysql'.
-
-[*fts_server_alias*]
-  (optional) The alias of the FTS3 server.
-  Defaults to 'fts3-server'.
-
-[*admin_list*]
-  (optional) List of DNs of the FTS3 administrators.
-  Defaults to ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri]
-
-[*fts_db_threads_num*]
-  (optional) The number of threads to use for the FTS3 database.
-  Defaults to 24.
-
-[*configure_fts*]
-  (optional) Whether to configure the FTS3 server.
-
-[*configure_db*]
-  (optional) Whether to configure the FTS3 database.
-  Defaults to true.
-
-[*configure_firewall*]
-  (optional) Whether to configure the firewall.
-  Defaults to true.
-
-[*configure_lsc*]
-  (optional) Whether to install and configure the servers as VOMS clients.
-  Defaults to true.
-
-[*vo_list*]
-  (optional) List of VOs to configure. Add the VOs to the list.
-  Possible values are 'alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam',
-    'escape', 'lhcb', 'ops', 'wlcg'
-  Defaults to [None].
 
 #### Examples
 
@@ -116,8 +57,8 @@ The following parameters are available in the `fts` class:
 * [`fts_server_alias`](#-fts--fts_server_alias)
 * [`admin_list`](#-fts--admin_list)
 * [`fts_db_threads_num`](#-fts--fts_db_threads_num)
-* [`configure_db`](#-fts--configure_db)
 * [`configure_fts`](#-fts--configure_fts)
+* [`configure_db`](#-fts--configure_db)
 * [`configure_firewall`](#-fts--configure_firewall)
 * [`configure_lsc`](#-fts--configure_lsc)
 * [`vo_list`](#-fts--vo_list)
@@ -126,7 +67,10 @@ The following parameters are available in the `fts` class:
 
 Data type: `String`
 
-
+(required) The hostname of the FTS3 server.
+Defaults to the value of $::fqdn.
+The value of this parameter is used to set the FTS3 server hostname in the
+MySQL database.
 
 Default value: `'fts3-server.infn.it'`
 
@@ -134,15 +78,19 @@ Default value: `'fts3-server.infn.it'`
 
 Data type: `String`
 
-
+(required) The hostname of the FTS3 database.
+Defaults to the value of $::fqdn.
+The value of this parameter is used to set the FTS3 database hostname in the FTS3
+configuration file.
 
 Default value: `'fts3-db.infn.it'`
 
 ##### <a name="-fts--db_name"></a>`db_name`
 
-Data type: `Strubg`
+Data type: `String`
 
-
+(required) The name of the FTS3 database.
+Defaults to 'fts'.
 
 Default value: `'fts'`
 
@@ -150,7 +98,7 @@ Default value: `'fts'`
 
 Data type: `String`
 
-
+(required) The password of the MySQL root user.
 
 Default value: `'ftstestpassword'`
 
@@ -158,7 +106,8 @@ Default value: `'ftstestpassword'`
 
 Data type: `String`
 
-
+(optional) The username of the FTS3 database.
+Defaults to 'fts3'.
 
 Default value: `'fts3'`
 
@@ -166,7 +115,8 @@ Default value: `'fts3'`
 
 Data type: `String`
 
-
+(optional) The type of the FTS3 database.
+Defaults to 'mysql'.
 
 Default value: `'mysql'`
 
@@ -174,39 +124,43 @@ Default value: `'mysql'`
 
 Data type: `String`
 
-
+(optional) The alias of the FTS3 server.
+Defaults to 'fts3-server'.
 
 Default value: `'fts3-server'`
 
 ##### <a name="-fts--admin_list"></a>`admin_list`
 
-Data type: `List`
+Data type: `Array`
 
-
+(optional) List of DNs of the FTS3 administrators.
+Defaults to ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri]
 
 Default value: `['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it']`
 
 ##### <a name="-fts--fts_db_threads_num"></a>`fts_db_threads_num`
 
-Data type: `Int`
+Data type: `Integer`
 
-
+(optional) The number of threads to use for the FTS3 database.
+Defaults to 24.
 
 Default value: `24`
-
-##### <a name="-fts--configure_db"></a>`configure_db`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
 
 ##### <a name="-fts--configure_fts"></a>`configure_fts`
 
 Data type: `Boolean`
 
+(optional) Whether to configure the FTS3 server.
 
+Default value: `true`
+
+##### <a name="-fts--configure_db"></a>`configure_db`
+
+Data type: `Boolean`
+
+(optional) Whether to configure the FTS3 database.
+Defaults to true.
 
 Default value: `true`
 
@@ -214,7 +168,8 @@ Default value: `true`
 
 Data type: `Boolean`
 
-
+(optional) Whether to configure the firewall.
+Defaults to true.
 
 Default value: `true`
 
@@ -222,17 +177,21 @@ Default value: `true`
 
 Data type: `Boolean`
 
-
+(optional) Whether to install and configure the servers as VOMS clients.
+Defaults to true.
 
 Default value: `true`
 
 ##### <a name="-fts--vo_list"></a>`vo_list`
 
-Data type: `List`
+Data type: `Array`
 
+(optional) List of VOs to configure. Add the VOs to the list.
+Possible values are 'alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam',
+  'escape', 'lhcb', 'ops', 'wlcg'
+Defaults to [None].
 
-
-Default value: `[]`
+Default value: `['cycgno', 'datacloud']`
 
 ### <a name="fts--client"></a>`fts::client`
 
@@ -248,30 +207,24 @@ include fts::client
 
 ### <a name="fts--database"></a>`fts::database`
 
-@Summary: this class configures the fts database
+@summary: this class configures the fts database
 
 === Parameters:
-[*db_password*]
 (required) the password for the fts database user
 
-[*db_name*]
 (required) the name of the fts database
 
-[*fts_host*]
 (required) the hostname of the fts server
 
-[*fts_db_user*]
 (required) the name of the fts database user
 
-[*admin_list*]
 (required) the list of the admin users for the fts database
 
-[*configure_firewall*]
 (optional) whether to configure the firewall or not
 
 #### Examples
 
-##### 
+##### Configure the fts database
 
 ```puppet
 class { 'fts::database':
@@ -330,7 +283,7 @@ Default value: `'fts3'`
 
 ##### <a name="-fts--database--admin_list"></a>`admin_list`
 
-Data type: `List`
+Data type: `Array`
 
 
 
@@ -349,29 +302,6 @@ Default value: `true`
 }
 
 ==== Parameters
-[*fts_user*] (string)
-  The user that will run the FTS server
-
-[*fts_db_type*] (string)
-  The type of database backend to use
-
-[*db_host*] (string)
-  The hostname of the database server
-
-[*fts_db_username*] (string)
-  The username to use to connect to the database
-
-[*fts_db_password*] (string)
-  The password to use to connect to the database
-
-[*fts_db_threads_num*] (integer)
-  The number of threads to use for the database backend
-
-[*fts_server_alias*] (string)
-  The alias to use for the FTS server
-
-[*configure_firewall*] (boolean)
-  Whether to configure the firewall or not
 
 #### Parameters
 
@@ -390,7 +320,7 @@ The following parameters are available in the `fts::server` class:
 
 Data type: `String`
 
-
+The user that will run the FTS server
 
 Default value: `'fts3'`
 
@@ -398,7 +328,7 @@ Default value: `'fts3'`
 
 Data type: `String`
 
-
+The type of database backend to use
 
 Default value: `'mysql'`
 
@@ -406,7 +336,7 @@ Default value: `'mysql'`
 
 Data type: `String`
 
-
+The hostname of the database server
 
 Default value: `'fts-db.infn.it'`
 
@@ -414,7 +344,7 @@ Default value: `'fts-db.infn.it'`
 
 Data type: `String`
 
-
+The username to use to connect to the database
 
 Default value: `'root'`
 
@@ -422,15 +352,15 @@ Default value: `'root'`
 
 Data type: `String`
 
-
+The password to use to connect to the database
 
 Default value: `'ftstestpassword'`
 
 ##### <a name="-fts--server--fts_db_threads_num"></a>`fts_db_threads_num`
 
-Data type: `Int`
+Data type: `Integer`
 
-
+The number of threads to use for the database backend
 
 Default value: `24`
 
@@ -438,7 +368,7 @@ Default value: `24`
 
 Data type: `String`
 
-
+The alias to use for the FTS server
 
 Default value: `'fts3-server'`
 
@@ -446,7 +376,7 @@ Default value: `'fts3-server'`
 
 Data type: `Boolean`
 
-
+Whether to configure the firewall or not
 
 Default value: `true`
 
