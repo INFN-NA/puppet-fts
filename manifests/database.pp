@@ -34,7 +34,7 @@ class fts::database (
   String  $db_name            = 'fts',
   String  $fts_host           = 'fts-server.infn.it',
   String  $fts_db_user        = 'fts3',
-  List    $admin_list         = ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
+  Array   $admin_list         = ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
   Boolean $configure_firewall = true,
 ) {
   class { 'selinux':
