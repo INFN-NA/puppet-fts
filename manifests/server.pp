@@ -184,6 +184,25 @@ class fts::server (
       line    => $iterate_array[1],
     }
   }
+
+  $fts_rest_settings_array = [
+    ['DbUserName = *',"DbUserName=${fts_db_username}"],
+
+    ['DbPassword = *',"DbPassword=${fts_db_password}"],
+
+    ['DbConnectString = *', "DbConnectString=${$fts_db_connect_string}"],
+  ]
+
+  $fts_rest_settings_array.each |$iterate_array| {
+    file_line { "'${iterate_array[1]}'_rest":
+      ensure  => 'present',
+      path    => '/etc/fts3/fts3restconfig',
+      require => Package['fts-rest-server'],
+      match   => $iterate_array[0],
+      line    => $iterate_array[1],
+    }
+  }
+
   service {
     default:
       ensure   => 'running',
