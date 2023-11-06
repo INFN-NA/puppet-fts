@@ -1,11 +1,5 @@
 # fts
 
-Welcome to your new module. A short overview of the generated parts can be found
-in the [PDK documentation][1].
-
-The README template below provides a starting point with details about what
-information to include in your README.
-
 ## Table of Contents
 
 1. [Description](#description)
@@ -21,7 +15,7 @@ on a couple of Hosts.
 ## Setup
 
 ```
-puppet module install bradipoeremita-fts
+puppet module install infn-na-fts
 ```
 
 ## Usage
@@ -63,4 +57,4 @@ fts {'creating the database'
 
 ## Limitations
 
-It works only on RedHat CentOS 7 distributions.
+It works only on CentOS 7 distributions.
