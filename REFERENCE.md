@@ -309,6 +309,7 @@ class { 'fts::server':
   fts_user => 'fts3',
   fts_db_type => 'mysql',
   fts_db_username => 'root',
+  fts_db_name => 'fts',
   fts_db_password => 'ftstestpassword',
   fts_db_threads_num => 24,
   fts_server_alias => 'fts3-server',
