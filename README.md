@@ -9,8 +9,8 @@
 
 ## Description
 
-A module to install and configure an FTS3 server and its MySQL database 
-on a couple of Hosts. 
+A module to install and configure an FTS3 server and its MySQL database
+on a couple of Hosts.
 
 ## Setup
 
@@ -35,9 +35,7 @@ mod 'puppet/yum', '7.1.0'
 mod 'puppetlabs/apache', '11.1.0'
 mod 'puppetlabs/mysql', '15.0.0'
 mod 'bradipoeremita-concat', '9.0.0'
-mod 'fts', 
-    :git => 'https://github.com/INFN-NA/puppet-fts.git',
-    :branch => 'main'
+mod 'nasd-fts', '0.1.6'
 ```
 
 * Modify the puppet.conf (`vim /etc/puppetlabs/puppet/puppet.conf`) file in both servers to point to your puppet server with the fts_development environment
@@ -59,7 +57,7 @@ mod 'fts',
 ## Test your installation
 
 1. Check your monitoring webpage at `https://{fts_fqdn}:8449/fts3/ftsmon/#/`;
-2. Execute the following command on your server ` curl --capath /etc/grid-security/certificates -E /etc/grid-security/hostcert.pem --key /etc/grid-security/hostkey.pem https://hostname:8446/whoami`;
+2. Execute the following command on your server ` curl --capath /etc/grid-security/certificates -E /etc/grid-security/hostcert.pem --key /etc/grid-security/hostkey.pem https://fts_host:8446/whoami`;
 
 ## Usage
 The module can be used to configure both the database and fts server on the same machine, or on two different
