@@ -13,6 +13,7 @@
 #     fts_db_user        => 'fts3',
 #     fts_db_type        => 'mysql',
 #     fts_server_alias   => 'fts3-server',
+#     admin_list         => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
 #     fts_db_threads_num => 24,
 #     configure_db       => true,
 #     configure_fts      => true,

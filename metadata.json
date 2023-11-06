@@ -1,6 +1,6 @@
 {
   "name": "fts",
-  "version": "0.1.0",
+  "version": "main",
   "author": "INFN-NA",
   "summary": "A puppet module to install and configure FTS created by Michele Delli Veneri and Francesco Di Nucci",
   "license": "Apache-2.0",
