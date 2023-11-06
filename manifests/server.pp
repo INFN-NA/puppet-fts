@@ -25,6 +25,8 @@
 # @param fts_db_username
 #   The username to use to connect to the database
 #
+# @param fts_db_name
+#   The name of the database to use
 # @param fts_db_password
 #   The password to use to connect to the database
 #
@@ -40,14 +42,15 @@
 class fts::server (
   String  $fts_user                 = 'fts3',
   String  $fts_db_type              = 'mysql',
-  String  $db_host                   = 'fts-db.infn.it',
+  String  $db_host                  = 'fts-db.infn.it',
   String  $fts_db_username          = 'root',
+  String  $fts_db_name              = 'fts',
   String  $fts_db_password          = 'ftstestpassword',
   Integer $fts_db_threads_num       = 24,
   String  $fts_server_alias         = 'fts3-server',
   Boolean $configure_firewall       = true,
 ) {
-  $fts_db_connect_string = "${db_host}:3306/${fts_user}"
+  $fts_db_connect_string = "${db_host}:3306/${fts_db_name}"
   include cron
   class { 'selinux':
     mode => 'enforcing',
