@@ -1,11 +1,8 @@
-# @summary This class installs and configures the FTS3 server and database.
+# @summary
+#   This class installs the FTS3 server and configures it to run as a service.
+#   It can also install the MySQL server and create the FTS3 database.
+#   The class can be used to configure only the FTS3 server, only the MySQL server, or both.
 # @example
-#   include fts
-#
-# This class installs the FTS3 server and configures it to run as a service.
-# It can also install the MySQL server and create the FTS3 database.
-# The class can be used to configure only the FTS3 server, only the MySQL server, or both.
-#
 #   class { 'fts':
 #     fts_host           => 'fts3-server.example.org',
 #     db_host            => 'fts3-db.example.org',

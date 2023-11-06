@@ -1,21 +1,17 @@
-# @summary A short summary of the purpose of this class
+# @summary
+#   This class defines the configuration for the FTS server.
+#   It takes in parameters for configuring the server and sets up the necessary resources.
 #
 # @example
-#   include fts::server
-#
-# This class defines the configuration for the FTS server.
-# It takes in parameters for configuring the server and sets up the necessary resources.
-# 
-# Example usage:
-# 
-# class { 'fts::server':
-#   fts_user => 'fts3',
-#   fts_db_type => 'mysql',
-#   fts_db_username => 'root',
-#   fts_db_password => 'ftstestpassword',
-#   fts_db_threads_num => 24,
-
-# }
+#   class { 'fts::server':
+#     fts_user => 'fts3',
+#     fts_db_type => 'mysql',
+#     fts_db_username => 'root',
+#     fts_db_password => 'ftstestpassword',
+#     fts_db_threads_num => 24,
+#     fts_server_alias => 'fts3-server',
+#     configure_firewall => true,
+#  }
 #
 # ==== Parameters
 # @param fts_user
