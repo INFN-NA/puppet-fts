@@ -10,7 +10,6 @@
 #                       '/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Massimo Sgaravatto sgaravat@infn.it'],
 #     configure_firewall => true,
 #   }
-# === Parameters:
 # @param db_password
 # (required) the password for the fts database user
 #

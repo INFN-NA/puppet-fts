@@ -13,7 +13,6 @@
 #     configure_firewall => true,
 #  }
 #
-# ==== Parameters
 # @param fts_user
 #   The user that will run the FTS server
 # 

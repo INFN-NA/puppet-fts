@@ -18,7 +18,6 @@
 #     configure_lsc      => true,
 #     vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
 #   }
-# === Parameters:
 # 
 # @param fts_host
 #   (required) The hostname of the FTS3 server.
