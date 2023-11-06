@@ -21,6 +21,25 @@ on a couple of Hosts.
     3. Reload your /etc/profile to update $PATH or run puppet agent by absolute path
     4. create the `certificates` folder in the root path and copy there your site `hostcert.pem` and `hostkey.pem`;
 * Employ the `fts` class to configure the FTS server and the MySQL database on the nodes, see the `fts=db.pp` and `fts-server.pp` in examples for some reference;
+* Add the following modules in your puppetfile:
+
+``` .puppet
+mod 'cnafsd-voms', '0.8.0'
+mod "puppetlabs-stdlib",'9.4.0'
+mod 'puppet-cron', '4.1.0'
+mod 'puppet-selinux', '4.0.0'
+mod 'puppetlabs-inifile', '6.1.0'
+mod 'puppet-systemd', '6.0.0'
+mod 'puppetlabs-firewall', '7.0.2'
+mod 'puppet/yum', '7.1.0'
+mod 'puppetlabs/apache', '11.1.0'
+mod 'puppetlabs/mysql', '15.0.0'
+mod 'bradipoeremita-concat', '9.0.0'
+mod 'fts', 
+    :git => 'https://github.com/INFN-NA/puppet-fts.git',
+    :branch => 'main'
+```
+
 * Modify the puppet.conf (`vim /etc/puppetlabs/puppet/puppet.conf`) file in both servers to point to your puppet server with the fts_development environment
 
 ``` .bash
