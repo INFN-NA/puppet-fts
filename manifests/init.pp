@@ -127,7 +127,7 @@ class fts (
       ;
     # EGI Trust Anchors
     'etc/yum.repos.d/EGI-trustanchors.repo':
-      source => '///modules/fts/EGI-trustanchors.repo',
+      source => 'puppet///modules/fts/EGI-trustanchors.repo',
       ;
   }
   include yum
