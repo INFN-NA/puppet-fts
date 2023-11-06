@@ -21,10 +21,24 @@ on a couple of Hosts.
     3. Reload your /etc/profile to update $PATH or run puppet agent by absolute path
     4. create the `certificates` folder in the root path and copy there your site `hostcert.pem` and `hostkey.pem`;
 * Employ the `fts` class to configure the FTS server and the MySQL database on the nodes, see the `fts=db.pp` and `fts-server.pp` in examples for some reference;
+* Modify the puppet.conf (`vim /etc/puppetlabs/puppet/puppet.conf`) file in both servers to point to your puppet server with the fts_development environment
+
+``` .bash
+[main]
+        server = yourpuppetserver.infn.it
+
+[agent]
+        pluginsync  = true
+        report      = true
+        environment = fts_development
+```
+
 * execute `puppet agent -t -v` on both servers (db first, fts server second);
 * execute `fetch-crl` (it is possible to use `-p` parameter to parallelize download);
 * restart httpd: `systemctl restart httpd`
+
 ## Test your installation
+
 1. Check your monitoring webpage at `https://{fts_fqdn}:8449/fts3/ftsmon/#/`;
 2. Execute the following command on your server ` curl --capath /etc/grid-security/certificates -E /etc/grid-security/hostcert.pem --key /etc/grid-security/hostkey.pem https://hostname:8446/whoami`;
 
