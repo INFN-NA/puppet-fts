@@ -25,7 +25,7 @@
         "version_requirement": "6.1.0"
       },
       {
-        "name": "puppetl/systemd",
+        "name": "puppet/systemd",
         "version_requirement": "6.0.0"
       },
       {
