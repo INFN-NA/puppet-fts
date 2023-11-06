@@ -86,7 +86,7 @@
 class fts (
   String  $fts_host           = 'fts3-server.infn.it',
   String  $db_host            = 'fts3-db.infn.it',
-  Strubg  $db_name            = 'fts',
+  String  $db_name            = 'fts',
   String  $db_root_password   = 'ftstestpassword',
   String  $fts_db_user        = 'fts3',
   String  $fts_db_type        = 'mysql',
