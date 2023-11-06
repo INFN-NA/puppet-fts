@@ -10,7 +10,7 @@
 It can also install the MySQL server and create the FTS3 database.
 The class can be used to configure only the FTS3 server, only the MySQL server, or both.
 * [`fts::client`](#fts--client): This class isntall the FTS client
-* [`fts::database`](#fts--database): @summary: this class configures the fts database  === Parameters: (required) the password for the fts database user  (required) the name of t
+* [`fts::database`](#fts--database): @summary: this class configures the fts database  (required) the password for the fts database user  (required) the name of the fts database 
 * [`fts::server`](#fts--server): This class defines the configuration for the FTS server.
 It takes in parameters for configuring the server and sets up the necessary resources.
 
@@ -18,7 +18,9 @@ It takes in parameters for configuring the server and sets up the necessary reso
 
 ### <a name="fts"></a>`fts`
 
-=== Parameters:
+This class installs the FTS3 server and configures it to run as a service.
+It can also install the MySQL server and create the FTS3 database.
+The class can be used to configure only the FTS3 server, only the MySQL server, or both.
 
 #### Examples
 
@@ -207,7 +209,6 @@ include fts::client
 
 @summary: this class configures the fts database
 
-=== Parameters:
 (required) the password for the fts database user
 
 (required) the name of the fts database
@@ -298,8 +299,6 @@ Default value: `true`
 ### <a name="fts--server"></a>`fts::server`
 
 }
-
-==== Parameters
 
 #### Examples
 
