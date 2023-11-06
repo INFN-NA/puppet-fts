@@ -93,6 +93,7 @@ class fts::database (
     require => [Exec['fts-grant'], Exec['root-grant']],
   }
   if $configure_firewall {
+    include firewall
     firewall {
       '03306 MariaDB':
         dport => 3306,
