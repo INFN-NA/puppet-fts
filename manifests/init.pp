@@ -154,6 +154,7 @@ class fts (
       ;
   }
 
+  include voms
   # # Configure the VOMS VOs
   # if $configure_lsc {
   #   include voms
