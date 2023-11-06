@@ -130,6 +130,7 @@ class fts (
       source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo',
       ;
   }
+  include yum
   package {
     default:
       ensure   => present,
@@ -153,20 +154,6 @@ class fts (
     ['vim', 'net-tools',  'yum-cron']:
       ;
   }
-
-  #include voms::atlas
-
-  # voms::vo { 'cygno.vo':
-  #   servers => [
-  #     {
-  #       server => 'voms-cygno.cloud.cnaf.infn.it',
-  #       port   => 15006,
-  #       dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
-  #       ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-  #     },
-  #   ],
-  # }
-
   # Configure the VOMS VOs
   if $configure_lsc {
     $vo_list.each |$vo| {
