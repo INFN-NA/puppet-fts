@@ -1,11 +1,11 @@
-yum::managed_repos:
-    - 'EGI-trustanchors'
-yum::repos:
-    EGI-trustanchors:
-        ensure: 'present'
-        enabled: true
-        descr: 'EGI Trust Anchors'
-        baseurl: 'https://repository.egi.eu/sw/production/cas/1/current/'
-        gpgcheck: true
-        gpgkey: 'https://repository.egi.eu/sw/production/cas/1/GPG-KEY-EUGridPMA-RPM-3'
+#yum::managed_repos:
+#    - 'EGI-trustanchors'
+#yum::repos:
+#    EGI-trustanchors:
+#        ensure: 'present'
+#        enabled: true
+#        descr: 'EGI Trust Anchors'
+#        baseurl: 'https://repository.egi.eu/sw/production/cas/1/current/'
+#        gpgcheck: true
+#        gpgkey: 'https://repository.egi.eu/sw/production/cas/1/GPG-KEY-EUGridPMA-RPM-3'
 
