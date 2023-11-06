@@ -55,12 +55,12 @@ class fts::database (
   }
   # ------------------------------ MariaDB / MySQL ----------------------------- #
   # create the fts database and user
-  mysql::db { 'fts':
+  mysql::db { $db_name:
     ensure   => 'present',
-    user     => 'fts',
+    user     => $fts_db_user,
     grant    => ['ALL', 'SUPER'],
     password => $db_password,
-    name     => 'fts',
+    name     => $db_name,
     host     => $::ipaddress,
     sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
   }
