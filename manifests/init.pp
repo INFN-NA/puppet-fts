@@ -231,7 +231,7 @@ class fts (
     class { 'fts::server':
       fts_user           => $fts_db_user,
       fts_db_type        => $fts_db_type,
-      fts_db             => $db_host,
+      db_host            => $db_host,
       fts_db_username    => $fts_db_user,
       fts_db_password    => $db_root_password,
       fts_db_threads_num => $fts_db_threads_num,
