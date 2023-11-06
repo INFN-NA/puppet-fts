@@ -226,29 +226,29 @@ class fts (
     }
   }
 
-  # if $configure_fts {
-  #   # Install the FTS3 server
-  #   class { 'fts::server':
-  #     fts_user           => $fts_db_user,
-  #     fts_db_type        => $fts_db_type,
-  #     fts_db             => $db_host,
-  #     fts_db_username    => $fts_db_user,
-  #     fts_db_password    => $db_root_password,
-  #     fts_db_threads_num => $fts_db_threads_num,
-  #     fts_server_alias   => $fts_server_alias,
-  #     configure_firewall => $configure_firewall,
-  #   }
-  # }
+  if $configure_fts {
+    # Install the FTS3 server
+    class { 'fts::server':
+      fts_user           => $fts_db_user,
+      fts_db_type        => $fts_db_type,
+      fts_db             => $db_host,
+      fts_db_username    => $fts_db_user,
+      fts_db_password    => $db_root_password,
+      fts_db_threads_num => $fts_db_threads_num,
+      fts_server_alias   => $fts_server_alias,
+      configure_firewall => $configure_firewall,
+    }
+  }
 
-  # # Install the MySQL server and configure the FTS3 database
-  # if $configure_db {
-  #   class { 'fts::db':
-  #     db_password        => $db_root_password,
-  #     db_name            => $db_name,
-  #     fts_host           => $fts_host,
-  #     fts_db_user        => $fts_db_user,
-  #     admin_list         => $admin_list,
-  #     configure_firewall => $configure_firewall,
-  #   }
-  # }
+  # Install the MySQL server and configure the FTS3 database
+  if $configure_db {
+    class { 'fts::db':
+      db_password        => $db_root_password,
+      db_name            => $db_name,
+      fts_host           => $fts_host,
+      fts_db_user        => $fts_db_user,
+      admin_list         => $admin_list,
+      configure_firewall => $configure_firewall,
+    }
+  }
 }
