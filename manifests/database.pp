@@ -1,6 +1,6 @@
-# @Summary: this class configures the fts database
+# @summary: this class configures the fts database
 #
-# @example
+# @example Configure the fts database
 #   class { 'fts::database':
 #      db_password => 'ftstestpassword',
 #      db_name     => 'fts',
@@ -11,22 +11,22 @@
 #     configure_firewall => true,
 #   }
 # === Parameters:
-# [*db_password*] 
+# @param db_password
 # (required) the password for the fts database user
 #
-# [*db_name*]
+# @param db_name
 # (required) the name of the fts database
 #
-# [*fts_host*]
+# @param fts_host
 # (required) the hostname of the fts server
 #
-# [*fts_db_user*]
+# @param fts_db_user
 # (required) the name of the fts database user
 #
-# [*admin_list*]
+# @param admin_list
 # (required) the list of the admin users for the fts database
 #
-# [*configure_firewall*]
+# @param configure_firewall
 # (optional) whether to configure the firewall or not
 #
 class fts::database (

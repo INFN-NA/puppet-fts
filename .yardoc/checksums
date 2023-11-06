@@ -1,4 +1,0 @@
-manifests/init.pp cafa26111caee2bfc7ca81769b046f643cfd269d
-manifests/client.pp eb986195008cd7c8fe250e1faa5b46cfaad61a8f
-manifests/server.pp 85de034ec15c2eb411d84d0e7009e2f815488395
-manifests/database.pp 74114d0f25c03b0341331ec2e2dab3aacab9c8a4
