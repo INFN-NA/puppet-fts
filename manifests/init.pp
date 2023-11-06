@@ -156,6 +156,17 @@ class fts (
 
   include voms::atlas
 
+  voms::vo { 'cygno.vo':
+    servers => [
+      {
+        server => 'voms-cygno.cloud.cnaf.infn.it',
+        port   => 15006,
+        dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
+        ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+      },
+    ],
+  }
+
   # # Configure the VOMS VOs
   # if $configure_lsc {
   #   include voms
