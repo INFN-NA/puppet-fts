@@ -94,7 +94,7 @@ class fts::server (
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    source  => 'puppet:///modules/fts/modules/httpd/fts3rest.conf',
+    source  => 'puppet:///modules/fts/fts3rest.conf',
     require => [Package['fts-rest-server'], Package['httpd']],
   }
 
@@ -103,7 +103,7 @@ class fts::server (
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    source  => 'puppet:///modules/fts/modules/httpd/ftsmon.conf',
+    source  => 'puppet:///modules/fts/ftsmon.conf',
     require => [Package['fts-monitoring'], Package['httpd']],
   }
   if $configure_firewall {
