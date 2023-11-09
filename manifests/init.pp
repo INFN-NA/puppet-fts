@@ -110,128 +110,147 @@ class fts (
   Boolean $build_database     = true,
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
-  # Install the EPEL repository
-  package {
-    default:
-      ensure   => present,
-      provider => yum,
-      ;
-    'epel-release':
-      ;
-  }
-  # Install the FTS3 repository and dependencies plus some usefull packages
-  file {
-    default:
-      owner => 'root',
-      group => 'root',
-      ;
+  if $facts['os']['name'] == 'RedHat' {
+    if $facts['os']['release']['major'] == '7' {
+      # Install the EPEL repository
+      package {
+        default:
+          ensure   => present,
+          provider => yum,
+          ;
+        'epel-release':
+          ;
+      }
+      # Install the FTS3 repository and dependencies plus some usefull packages
+      file {
+        default:
+          owner => 'root',
+          group => 'root',
+          ;
 
-    # DMC EL7
-    '/etc/yum.repos.d/dmc-el7.repo':
-      source => 'https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo',
-      ;
+        # DMC EL7
+        '/etc/yum.repos.d/dmc-el7.repo':
+          source => 'https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo',
+          ;
 
-    # FTS Production EL7
-    '/etc/yum.repos.d/fts3-el7.repo':
-      source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-el7.repo',
-      ;
+        # FTS Production EL7
+        '/etc/yum.repos.d/fts3-el7.repo':
+          source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-el7.repo',
+          ;
 
-    # FTS Depend EL7
-    '/etc/yum.repos.d/fts3-depend-el7.repo':
-      source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo',
-      ;
-  }
-  # EGI Trust Anchor repository
-  file { '/etc/yum.repos.d/EGI-trustanchors.repo':
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/fts/EGI-trustanchors.repo',
-  }
-  include yum
-  package {
-    default:
-      ensure   => present,
-      provider => yum,
-      require  => [File['/etc/yum.repos.d/fts3-depend-el7.repo'], File['/etc/yum.repos.d/EGI-trustanchors.repo']],
-      ;
+        # FTS Depend EL7
+        '/etc/yum.repos.d/fts3-depend-el7.repo':
+          source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo',
+          ;
+      }
+      # EGI Trust Anchor repository
+      file { '/etc/yum.repos.d/EGI-trustanchors.repo':
+        ensure => file,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0644',
+        source => 'puppet:///modules/fts/EGI-trustanchors.repo',
+      }
+      include yum
+      package {
+        default:
+          ensure   => present,
+          provider => yum,
+          require  => [File['/etc/yum.repos.d/fts3-depend-el7.repo'], File['/etc/yum.repos.d/EGI-trustanchors.repo']],
+          ;
 
-    # CentOS SCLo SIG software
-    # fts-rest-server requires rh-python36-mod_wsgi
-    ['centos-release-scl','centos-release-scl-rh']:
-      ;
+        # CentOS SCLo SIG software
+        # fts-rest-server requires rh-python36-mod_wsgi
+        ['centos-release-scl','centos-release-scl-rh']:
+          ;
 
-    # Gfal2 and dependencies
-    ['CGSI-gSOAP', 'davix', 'gfal2-all', 'srm-ifce']:
-      ;
+        # Gfal2 and dependencies
+        ['CGSI-gSOAP', 'davix', 'gfal2-all', 'srm-ifce']:
+          ;
 
-    # Certificate management
-    ['fetch-crl', 'ca-policy-egi-core', 'voms-clients-java']:
-      ;
-    # utilities
-    ['vim', 'net-tools',  'yum-cron']:
-      ;
-  }
-  # Configure the VOMS VOs
-  if $configure_lsc {
-    $vo_list.each |$vo| {
-      case $vo {
-        'alice': {
-          include voms::alice
-        }
-        'atlas': {
-          include voms::atlas
-        }
-        'cms': {
-          include voms::cms
-        }
-        'cygno': {
-          voms::vo { 'cygno.vo':
-            servers => [
-              {
-                server => 'voms-cygno.cloud.cnaf.infn.it',
-                port   => 15006,
-                dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
-                ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-              }
-            ]
-          }
-        }
-        'datacloud': {
-          voms::vo { 'datacloud.vo':
-            servers => [
-              {
-                server => 'iam-aa.wp6.cloud.infn.it',
-                port   => 15000,
-                dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-aa.wp6.cloud.infn.it',
-                ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-              }
-            ]
-          }
-        }
-        'dteam': {
-          include voms::dteam
-        }
-        'escape': {
-          include voms::escape
-        }
-        'lhcb': {
-          include voms::lhcb
-        }
-        'ops': {
-          include voms::ops
-        }
-        'wlcg': {
-          include voms::wlcg
-        }
-        default: {
-          warning("Unknown VO: ${vo}")
-        }
+        # Certificate management
+        ['fetch-crl', 'ca-policy-egi-core', 'voms-clients-java']:
+          ;
+        # utilities
+        ['vim', 'net-tools',  'yum-cron']:
+          ;
       }
     }
   }
-
+  # Configure the VOMS VOs
+  if $configure_lsc {
+    case $facts['os']['name'] {
+      'RedHat': {
+        case $facts['os']['release']['major'] {
+          '7': {
+            $vo_list.each |$vo| {
+              case $vo {
+                'alice': {
+                  include voms::alice
+                }
+                'atlas': {
+                  include voms::atlas
+                }
+                'cms': {
+                  include voms::cms
+                }
+                'cygno': {
+                  voms::vo { 'cygno.vo':
+                    servers => [
+                      {
+                        server => 'voms-cygno.cloud.cnaf.infn.it',
+                        port   => 15006,
+                        dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
+                        ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+                      }
+                    ]
+                  }
+                }
+                'datacloud': {
+                  voms::vo { 'datacloud.vo':
+                    servers => [
+                      {
+                        server => 'iam-aa.wp6.cloud.infn.it',
+                        port   => 15000,
+                        dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-aa.wp6.cloud.infn.it',
+                        ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+                      }
+                    ]
+                  }
+                }
+                'dteam': {
+                  include voms::dteam
+                }
+                'escape': {
+                  include voms::escape
+                }
+                'lhcb': {
+                  include voms::lhcb
+                }
+                'ops': {
+                  include voms::ops
+                }
+                'wlcg': {
+                  include voms::wlcg
+                }
+                default: {
+                  warning("Unknown VO: ${vo}")
+                }
+              }
+            }
+          }
+          default: {
+            warning("Unsupported Release: ${facts['os']['release']['major']}")
+            warning('Skipping LSC Configuration')
+          }
+        }
+      }
+      default: {
+        warning("Unsupported OS: ${facts['os']['name']} ${facts['os']['release']['major']}")
+        warning('Skipping LSC Configuration')
+      }
+    }
+  }
   if $configure_fts {
     # Install the FTS3 server
     class { 'fts::server':
