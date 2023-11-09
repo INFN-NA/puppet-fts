@@ -36,9 +36,10 @@ node 'fts-ha-wp1.na.infn.it' {
 
   class { 'fts':
     fts_host           => 'fts-ha-wp1.na.infn.it',
-    db_host            => 'db-ha-wp1.na.infn.it',
-    db_root_password   => 'ftstestpassword',
+    db_host            => '10.138.0.51',
+    db_root_password   => 'roottestpassword',
     fts_db_user        => 'fts3',
+    fts_db_password    => 'ftstestpassword',
     fts_db_type        => 'mysql',
     fts_server_alias   => 'fts3-server',
     admin_list         => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
