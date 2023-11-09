@@ -30,7 +30,8 @@ The class can be used to configure only the FTS3 server, only the MySQL server, 
 class { 'fts':
   fts_host           => 'fts3-server.example.org',
   db_host            => 'fts3-db.example.org',
-  db_root_password   => 'ftstestpassword',
+  db_root_password   => 'roottestpassword',
+   fts_db_password   => 'ftstestpassword',
   fts_db_user        => 'fts3',
   fts_db_type        => 'mysql',
   fts_server_alias   => 'fts3-server',
@@ -40,6 +41,7 @@ class { 'fts':
   configure_fts      => true,
   configure_firewall => true,
   configure_lsc      => true,
+  build_database     => true,
   vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
 }
 ```
@@ -53,6 +55,7 @@ The following parameters are available in the `fts` class:
 * [`db_name`](#-fts--db_name)
 * [`db_root_password`](#-fts--db_root_password)
 * [`fts_db_user`](#-fts--fts_db_user)
+* [`fts_db_password`](#-fts--fts_db_password)
 * [`fts_db_type`](#-fts--fts_db_type)
 * [`fts_server_alias`](#-fts--fts_server_alias)
 * [`admin_list`](#-fts--admin_list)
@@ -61,6 +64,7 @@ The following parameters are available in the `fts` class:
 * [`configure_db`](#-fts--configure_db)
 * [`configure_firewall`](#-fts--configure_firewall)
 * [`configure_lsc`](#-fts--configure_lsc)
+* [`build_database`](#-fts--build_database)
 * [`vo_list`](#-fts--vo_list)
 
 ##### <a name="-fts--fts_host"></a>`fts_host`
@@ -100,7 +104,7 @@ Data type: `String`
 
 (required) The password of the MySQL root user.
 
-Default value: `'ftstestpassword'`
+Default value: `'dbrootpassword'`
 
 ##### <a name="-fts--fts_db_user"></a>`fts_db_user`
 
@@ -110,6 +114,15 @@ Data type: `String`
 Defaults to 'fts3'.
 
 Default value: `'fts3'`
+
+##### <a name="-fts--fts_db_password"></a>`fts_db_password`
+
+Data type: `String`
+
+(optional) The password of the FTS3 database.
+Defaults to 'ftstestpassword'.
+
+Default value: `'ftstestpassword'`
 
 ##### <a name="-fts--fts_db_type"></a>`fts_db_type`
 
@@ -182,6 +195,14 @@ Defaults to true.
 
 Default value: `true`
 
+##### <a name="-fts--build_database"></a>`build_database`
+
+Data type: `Boolean`
+
+(optional) Whether to build the FTS3 database.
+
+Default value: `true`
+
 ##### <a name="-fts--vo_list"></a>`vo_list`
 
 Data type: `Array`
@@ -221,6 +242,8 @@ include fts::client
 
 (optional) whether to configure the firewall or not
 
+(optional) whether to build the database or not\
+
 #### Examples
 
 ##### Configure the fts database
@@ -247,6 +270,7 @@ The following parameters are available in the `fts::database` class:
 * [`fts_db_user`](#-fts--database--fts_db_user)
 * [`admin_list`](#-fts--database--admin_list)
 * [`configure_firewall`](#-fts--database--configure_firewall)
+* [`build_database`](#-fts--database--build_database)
 
 ##### <a name="-fts--database--db_password"></a>`db_password`
 
@@ -289,6 +313,14 @@ Data type: `Array`
 Default value: `['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it']`
 
 ##### <a name="-fts--database--configure_firewall"></a>`configure_firewall`
+
+Data type: `Boolean`
+
+
+
+Default value: `true`
+
+##### <a name="-fts--database--build_database"></a>`build_database`
 
 Data type: `Boolean`
 
@@ -367,6 +399,8 @@ Default value: `'root'`
 Data type: `String`
 
 The name of the database to use
+
+Default value: `'fts'`
 
 ##### <a name="-fts--server--fts_db_password"></a>`fts_db_password`
 

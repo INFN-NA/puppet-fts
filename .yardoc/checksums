@@ -1,4 +1,4 @@
-manifests/init.pp d3479b84fb18d11650cc712d03c3a574feaa97b7
+manifests/init.pp fbeacc98e020701b2f96cbbd78482f0b6ae089a4
 manifests/client.pp eb986195008cd7c8fe250e1faa5b46cfaad61a8f
-manifests/server.pp 3c54732aad980ed890967e6eb3e5d3d2b58efc33
-manifests/database.pp 225ee3822a9e1b5037083fe1294cb010e248f484
+manifests/server.pp e7f6e05f2526d369704d738fadb121a6f600d3c7
+manifests/database.pp 589bd9adb6c4bffe387895d95223742f4143ca16
