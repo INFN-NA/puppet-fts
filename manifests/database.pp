@@ -76,27 +76,30 @@ class fts::database (
       require => Mysql::Db['fts'],
     }
   }
-  exec { 'fts-grant':
-    command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
-    unless  => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user='${fts_db_user}'@'${fts_host}'\" | grep fts@'${fts_host}'",
-    require => Mysql::Db['fts'],
-  }
+  if $build_database {
+    exec { 'fts-grant':
+      command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
+      unless  => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user='${fts_db_user}'@'${fts_host}'\" | grep fts@'${fts_host}'",
+      require => Mysql::Db['fts'],
+    }
 
-  exec { 'fts-super':
-    command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT SUPER ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
-    require => Exec['fts-grant']
-  }
+    exec { 'fts-super':
+      command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT SUPER ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
+      require => Exec['fts-grant']
+    }
 
-  exec { 'root-grant':
-    command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO root@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
-    unless  => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user=root@'${fts_host}'\" | grep root@'${fts_host}'",
-    require => Mysql::Db['fts'],
-  }
+    exec { 'root-grant':
+      command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO root@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
+      unless  => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user=root@'${fts_host}'\" | grep root@'${fts_host}'",
+      require => Mysql::Db['fts'],
+    }
 
-  exec { 'flush privileges':
-    command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"FLUSH PRIVILEGES\"",
-    require => [Exec['fts-grant'], Exec['root-grant']],
+    exec { 'flush privileges':
+      command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"FLUSH PRIVILEGES\"",
+      require => [Exec['fts-grant'], Exec['root-grant']],
+    }
   }
+  # ------------------------------ Firewall ----------------------------- #
   if $configure_firewall {
     include firewall
     firewall {
