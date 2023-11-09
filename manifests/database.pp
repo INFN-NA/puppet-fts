@@ -28,6 +28,9 @@
 # @param configure_firewall
 # (optional) whether to configure the firewall or not
 #
+# @param build_database
+# (optional) whether to build the database or not\
+#
 class fts::database (
   String  $db_password        = 'ftstestpassword',
   String  $db_name            = 'fts',
@@ -35,18 +38,21 @@ class fts::database (
   String  $fts_db_user        = 'fts3',
   Array   $admin_list         = ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
   Boolean $configure_firewall = true,
+  Boolean $build_database     = true,
 ) {
   class { 'selinux':
     mode => 'permissive',
   }
   # instantiate the mysql server
-  class { 'mysql::server':
-    root_password    => $db_password,
-    override_options => {
-      'mysqld' => {
-        'bind-address' => $::ipaddress,
+  if $build_database {
+    class { 'mysql::server':
+      root_password    => $db_password,
+      override_options => {
+        'mysqld' => {
+          'bind-address' => $::ipaddress,
+        },
       },
-    },
+    }
   }
 # ------------------------------- Dependencies ------------------------------- #
   package { 'fts-mysql':

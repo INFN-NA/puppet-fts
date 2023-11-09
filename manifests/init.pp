@@ -16,6 +16,7 @@
 #     configure_fts      => true,
 #     configure_firewall => true,
 #     configure_lsc      => true,
+#     build_database     => true,
 #     vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
 #   }
 # 
@@ -41,6 +42,10 @@
 # @param fts_db_user
 #   (optional) The username of the FTS3 database.
 #   Defaults to 'fts3'.
+#
+# @param fts_db_password
+#   (optional) The password of the FTS3 database.
+#   Defaults to 'ftstestpassword'.
 #
 # @param fts_db_type
 #   (optional) The type of the FTS3 database.
@@ -72,6 +77,9 @@
 # @param configure_lsc
 #   (optional) Whether to install and configure the servers as VOMS clients.
 #   Defaults to true.
+# 
+# @param build_database
+#   (optional) Whether to build the FTS3 database.
 #
 # @param vo_list
 #   (optional) List of VOs to configure. Add the VOs to the list.
@@ -83,8 +91,9 @@ class fts (
   String  $fts_host           = 'fts3-server.infn.it',
   String  $db_host            = 'fts3-db.infn.it',
   String  $db_name            = 'fts',
-  String  $db_root_password   = 'ftstestpassword',
+  String  $db_root_password   = 'dbrootpassword',
   String  $fts_db_user        = 'fts3',
+  String  $fts_db_password    = 'ftstestpassword',
   String  $fts_db_type        = 'mysql',
   String  $fts_server_alias   = 'fts3-server',
   Array   $admin_list         = ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
@@ -93,6 +102,7 @@ class fts (
   Boolean $configure_fts      = true,
   Boolean $configure_firewall = true,
   Boolean $configure_lsc      = true,
+  Boolean $build_database     = true,
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
   # Install the EPEL repository
@@ -224,7 +234,7 @@ class fts (
       fts_db_type        => $fts_db_type,
       db_host            => $db_host,
       fts_db_username    => $fts_db_user,
-      fts_db_password    => $db_root_password,
+      fts_db_password    => $fts_db_password,
       fts_db_threads_num => $fts_db_threads_num,
       fts_server_alias   => $fts_server_alias,
       configure_firewall => $configure_firewall,
@@ -240,6 +250,7 @@ class fts (
       fts_db_user        => $fts_db_user,
       admin_list         => $admin_list,
       configure_firewall => $configure_firewall,
+      build_database     => $build_database,
     }
   }
 }
