@@ -31,7 +31,7 @@ class { 'fts':
   fts_host           => 'fts3-server.example.org',
   db_host            => 'fts3-db.example.org',
   db_root_password   => 'roottestpassword',
-   fts_db_password   => 'ftstestpassword',
+  fts_db_password    => 'ftstestpassword',
   fts_db_user        => 'fts3',
   fts_db_type        => 'mysql',
   fts_server_alias   => 'fts3-server',
