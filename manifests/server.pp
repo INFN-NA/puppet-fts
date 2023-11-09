@@ -15,32 +15,34 @@
 #  }
 #
 # @param fts_user
-#   The user that will run the FTS server
+#   (required) The user that will run the FTS server
 # 
 # @param fts_db_type
-#   The type of database backend to use
+#   (optional) The type of database backend to use
 #
 # @param db_host
-#   The hostname of the database server
+#   (required) The hostname or IPV4 of the database server
 #
 # @param fts_db_username
-#   The username to use to connect to the database
+#   (optional) The username to use to connect to the database
 #
 # @param fts_db_name
-#   The name of the database to use
+#   (optional) The name of the database to use
 #
 # @param fts_db_password
-#   The password to use to connect to the database
+#   (optional) The password to use to connect to the database
 #
 # @param fts_db_threads_num
-#   The number of threads to use for the database backend
+#   (optional) The number of threads to use for the database backend
 #
 # @param fts_server_alias
-#   The alias to use for the FTS server
+#   (optional) The alias to use for the FTS server
 #
 # @param configure_firewall
-#   Whether to configure the firewall or not
+#   (optional) Whether to configure the firewall or not
 #
+# @param configure_selinux
+#   (optional) Whether to configure SELinux or not
 class fts::server (
   String  $fts_user                 = 'fts3',
   String  $fts_db_type              = 'mysql',
@@ -51,6 +53,7 @@ class fts::server (
   Integer $fts_db_threads_num       = 24,
   String  $fts_server_alias         = 'fts3-server',
   Boolean $configure_firewall       = true,
+  Boolean $configure_selinux        = true,
 ) {
   $fts_db_connect_string = "${db_host}:3306/${fts_db_name}"
   include cron

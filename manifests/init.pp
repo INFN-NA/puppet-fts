@@ -78,6 +78,9 @@
 # @param configure_lsc
 #   (optional) Whether to install and configure the servers as VOMS clients.
 #   Defaults to true.
+# @param configure_selinux
+#   (optional) Whether to configure SELinux.
+#   Defaults to true.
 # 
 # @param build_database
 #   (optional) Whether to build the FTS3 database.
@@ -103,6 +106,7 @@ class fts (
   Boolean $configure_fts      = true,
   Boolean $configure_firewall = true,
   Boolean $configure_lsc      = true,
+  Boolean $configure_selinux  = true,
   Boolean $build_database     = true,
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
@@ -239,6 +243,7 @@ class fts (
       fts_db_threads_num => $fts_db_threads_num,
       fts_server_alias   => $fts_server_alias,
       configure_firewall => $configure_firewall,
+      configure_selinux  => $configure_selinux,
     }
   }
 
@@ -251,6 +256,7 @@ class fts (
       fts_db_user        => $fts_db_user,
       admin_list         => $admin_list,
       configure_firewall => $configure_firewall,
+      comfigure_selinux  => $configure_selinux,
       build_database     => $build_database,
     }
   }

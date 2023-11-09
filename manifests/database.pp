@@ -28,6 +28,9 @@
 # @param configure_firewall
 # (optional) whether to configure the firewall or not
 #
+# @param configure_selinux
+# (optional) whether to configure selinux or not
+#
 # @param build_database
 # (optional) whether to build the database or not\
 #
@@ -38,10 +41,14 @@ class fts::database (
   String  $fts_db_user        = 'fts3',
   Array   $admin_list         = ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
   Boolean $configure_firewall = true,
+  Boolean $configure_selinux  = true,
   Boolean $build_database     = true,
 ) {
-  class { 'selinux':
-    mode => 'permissive',
+  # ------------------------------- SELinux ------------------------------- #
+  if $configure_selinux {
+    class { 'selinux':
+      mode => 'permissive',
+    }
   }
   # instantiate the mysql server
   if $build_database {
