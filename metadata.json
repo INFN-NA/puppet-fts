@@ -1,6 +1,6 @@
 {
   "name": "nasd-fts",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "nasd",
   "summary": "A puppet module to install and configure FTS created by Michele Delli Veneri and Francesco Di Nucci",
   "license": "Apache-2.0",
