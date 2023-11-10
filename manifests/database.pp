@@ -10,8 +10,8 @@
 #                       '/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Massimo Sgaravatto sgaravat@infn.it'],
 #     configure_firewall => true,
 #   }
-# @param db_password
-# (required) the password for the fts database user
+# @param db_root_password
+# (required) the root password for the mysql server
 #
 # @param db_name
 # (required) the name of the fts database
@@ -21,6 +21,9 @@
 #
 # @param fts_db_user
 # (required) the name of the fts database user
+#
+# @param fts_db_password
+# (required) the password of the fts database user
 #
 # @param admin_list
 # (required) the list of the admin users for the fts database
@@ -39,10 +42,11 @@
 #   In order to build the tables, the MySQL database, and user must already exist.
 #
 class fts::database (
-  String  $db_password        = 'ftstestpassword',
+  String  $db_root_password   = 'roottestpassword',
   String  $db_name            = 'fts',
   String  $fts_host           = 'fts-server.infn.it',
   String  $fts_db_user        = 'fts3',
+  String  $fts_db_password    = 'ftstestpassword',
   Array   $admin_list         = ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
   Boolean $configure_firewall = true,
   Boolean $configure_selinux  = true,
@@ -66,7 +70,7 @@ class fts::database (
   # instantiate the mysql server
   if $build_database {
     class { 'mysql::server':
-      root_password    => $db_password,
+      root_password    => $db_root_password,
       override_options => {
         'mysqld' => {
           'bind-address' => $::ipaddress,
@@ -89,7 +93,7 @@ class fts::database (
               ensure   => 'present',
               user     => $fts_db_user,
               grant    => ['ALL', 'SUPER'],
-              password => $db_password,
+              password => $fts_db_password,
               name     => $db_name,
               host     => $::ipaddress,
               sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
@@ -102,7 +106,7 @@ class fts::database (
               ensure   => 'present',
               user     => $fts_db_user,
               grant    => ['ALL', 'SUPER'],
-              password => $db_password,
+              password => $fts_db_password,
               name     => $db_name,
               host     => $::ipaddress,
             }
@@ -112,36 +116,54 @@ class fts::database (
       default: {
         warning("Database ${db_name} has been created but the tables have not been populated")
         warning("${facts['os']['name']} ${facts['os']['release']['major']} is an unsupported OS to populate the FTS tables, only RHEL 7 is supported")
+        mysql::db { $db_name:
+          ensure   => 'present',
+          user     => $fts_db_user,
+          grant    => ['ALL', 'SUPER'],
+          password => $fts_db_password,
+          name     => $db_name,
+          host     => $::ipaddress,
+        }
       }
+    }
+  }
+  else {
+    mysql::db { $db_name:
+      ensure   => 'present',
+      user     => $fts_db_user,
+      grant    => ['ALL', 'SUPER'],
+      password => $fts_db_password,
+      name     => $db_name,
+      host     => $::ipaddress,
     }
   }
   $admin_list.each |$admin| {
     exec { "fts-admins-'${admin}'":
-      command => "/usr/bin/mysql --user='${fts_db_user}' --password='${db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"INSERT INTO t_authz_dn  (dn, operation) VALUES ('${admin}', 'config')\"",
-      unless  => "/usr/bin/mysql --user='${fts_db_user}' --password='${db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"SELECT * FROM t_authz_dn WHERE dn='${admin}' AND operation='config'\" | grep '${admin}'",
+      command => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"INSERT INTO t_authz_dn  (dn, operation) VALUES ('${admin}', 'config')\"",
+      unless  => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"SELECT * FROM t_authz_dn WHERE dn='${admin}' AND operation='config'\" | grep '${admin}'",
       require => Mysql::Db['fts'],
     }
   }
   if $build_database {
     exec { 'fts-grant':
-      command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
-      unless  => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user='${fts_db_user}'@'${fts_host}'\" | grep fts@'${fts_host}'",
+      command => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
+      unless  => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user='${fts_db_user}'@'${fts_host}'\" | grep fts@'${fts_host}'",
       require => Mysql::Db['fts'],
     }
 
     exec { 'fts-super':
-      command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT SUPER ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
+      command => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"GRANT SUPER ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
       require => Exec['fts-grant']
     }
 
     exec { 'root-grant':
-      command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO root@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
-      unless  => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user=root@'${fts_host}'\" | grep root@'${fts_host}'",
+      command => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO root@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
+      unless  => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user=root@'${fts_host}'\" | grep root@'${fts_host}'",
       require => Mysql::Db['fts'],
     }
 
     exec { 'flush privileges':
-      command => "/usr/bin/mysql --user='root' --password='${db_password}' --database='${db_name}'  --execute \"FLUSH PRIVILEGES\"",
+      command => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"FLUSH PRIVILEGES\"",
       require => [Exec['fts-grant'], Exec['root-grant']],
     }
   }

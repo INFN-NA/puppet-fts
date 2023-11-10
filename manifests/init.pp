@@ -207,8 +207,8 @@ class fts (
                         port   => 15006,
                         dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-cygno.cloud.cnaf.infn.it',
                         ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-                      }
-                    ]
+                      },
+                    ],
                   }
                 }
                 'datacloud': {
@@ -219,8 +219,8 @@ class fts (
                         port   => 15000,
                         dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-aa.wp6.cloud.infn.it',
                         ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
-                      }
-                    ]
+                      },
+                    ],
                   }
                 }
                 'dteam': {
@@ -272,7 +272,7 @@ class fts (
               fts_server_alias   => $fts_server_alias,
               configure_firewall => $configure_firewall,
               configure_selinux  => $configure_selinux,
-              build_fts_tables   => $build_fts_tables
+              build_fts_tables   => $build_fts_tables,
             }
           }
           default: {
@@ -291,10 +291,11 @@ class fts (
   # Install the MySQL server and configure the FTS3 database
   if $configure_db {
     class { 'fts::database':
-      db_password        => $db_root_password,
+      db_root_password   => $db_root_password,
       db_name            => $db_name,
       fts_host           => $fts_host,
       fts_db_user        => $fts_db_user,
+      fts_db_password    => $fts_db_password,
       admin_list         => $admin_list,
       configure_firewall => $configure_firewall,
       comfigure_selinux  => $configure_selinux,
