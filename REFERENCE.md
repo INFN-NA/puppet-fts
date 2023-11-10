@@ -4,3 +4,533 @@
 
 ## Table of Contents
 
+### Classes
+
+* [`fts`](#fts): This class installs the FTS3 server and configures it to run as a service.
+It can also install the MySQL server and create the FTS3 database.
+The class can be used to configure only the FTS3 server, only the MySQL server, or both.
+* [`fts::client`](#fts--client): This class isntall the FTS client
+* [`fts::database`](#fts--database): @summary: this class configures the fts database. Depending on the parameter choices it can build an fts server, create the   database and th
+* [`fts::server`](#fts--server): This class defines the configuration for the FTS server.
+It takes in parameters for configuring the server and sets up the necessary resources.
+
+## Classes
+
+### <a name="fts"></a>`fts`
+
+(optional) whether to build the mysql server or not. Defaults to true.
+
+#### Examples
+
+##### 
+
+```puppet
+class { 'fts':
+  fts_host           => 'fts3-server.example.org',
+  db_host            => 'fts3-db.example.org',
+  db_root_password   => 'roottestpassword',
+  fts_db_password    => 'ftstestpassword',
+  fts_db_user        => 'fts3',
+  fts_db_type        => 'mysql',
+  fts_server_alias   => 'fts3-server',
+  admin_list         => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
+  fts_db_threads_num => 24,
+  configure_db       => true,
+  configure_fts      => true,
+  configure_firewall => true,
+  configure_selinux  => true,
+  build_mysql_server => true,
+  build_fts_tables   => true,
+  grant_privileges   => true,
+  configure_lsc      => true,
+  vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `fts` class:
+
+* [`fts_host`](#-fts--fts_host)
+* [`db_host`](#-fts--db_host)
+* [`db_name`](#-fts--db_name)
+* [`db_root_password`](#-fts--db_root_password)
+* [`fts_db_user`](#-fts--fts_db_user)
+* [`fts_db_password`](#-fts--fts_db_password)
+* [`fts_db_type`](#-fts--fts_db_type)
+* [`fts_server_alias`](#-fts--fts_server_alias)
+* [`admin_list`](#-fts--admin_list)
+* [`fts_db_threads_num`](#-fts--fts_db_threads_num)
+* [`configure_fts`](#-fts--configure_fts)
+* [`configure_db`](#-fts--configure_db)
+* [`configure_firewall`](#-fts--configure_firewall)
+* [`configure_lsc`](#-fts--configure_lsc)
+* [`configure_selinux`](#-fts--configure_selinux)
+* [`build_mysql_server`](#-fts--build_mysql_server)
+* [`vo_list`](#-fts--vo_list)
+* [`build_fts_tables`](#-fts--build_fts_tables)
+* [`grant_privileges`](#-fts--grant_privileges)
+
+##### <a name="-fts--fts_host"></a>`fts_host`
+
+Data type: `String`
+
+(required) The hostname of the FTS3 server.
+Defaults to the value of $::fqdn.
+The value of this parameter is used to set the FTS3 server hostname in the
+MySQL database.
+
+Default value: `'fts3-server.infn.it'`
+
+##### <a name="-fts--db_host"></a>`db_host`
+
+Data type: `String`
+
+(required) The hostname of the FTS3 database.
+Defaults to the value of $::fqdn.
+The value of this parameter is used to set the FTS3 database hostname in the FTS3
+configuration file.
+
+Default value: `'fts3-db.infn.it'`
+
+##### <a name="-fts--db_name"></a>`db_name`
+
+Data type: `String`
+
+(required) The name of the FTS3 database.
+Defaults to 'fts'.
+
+Default value: `'fts'`
+
+##### <a name="-fts--db_root_password"></a>`db_root_password`
+
+Data type: `String`
+
+(required) The password of the MySQL root user.
+
+Default value: `'dbrootpassword'`
+
+##### <a name="-fts--fts_db_user"></a>`fts_db_user`
+
+Data type: `String`
+
+(optional) The username of the FTS3 database.
+Defaults to 'fts3'.
+
+Default value: `'fts3'`
+
+##### <a name="-fts--fts_db_password"></a>`fts_db_password`
+
+Data type: `String`
+
+(optional) The password of the FTS3 database.
+Defaults to 'ftstestpassword'.
+
+Default value: `'ftstestpassword'`
+
+##### <a name="-fts--fts_db_type"></a>`fts_db_type`
+
+Data type: `String`
+
+(optional) The type of the FTS3 database.
+Defaults to 'mysql'.
+
+Default value: `'mysql'`
+
+##### <a name="-fts--fts_server_alias"></a>`fts_server_alias`
+
+Data type: `String`
+
+(optional) The alias of the FTS3 server.
+Defaults to 'fts3-server'.
+
+Default value: `'fts3-server'`
+
+##### <a name="-fts--admin_list"></a>`admin_list`
+
+Data type: `Array`
+
+(optional) List of DNs of the FTS3 administrators.
+Defaults to ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri]
+
+Default value: `['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it']`
+
+##### <a name="-fts--fts_db_threads_num"></a>`fts_db_threads_num`
+
+Data type: `Integer`
+
+(optional) The number of threads to use for the FTS3 database.
+Defaults to 24.
+
+Default value: `24`
+
+##### <a name="-fts--configure_fts"></a>`configure_fts`
+
+Data type: `Boolean`
+
+(optional) Whether to configure the FTS3 server.
+
+Default value: `true`
+
+##### <a name="-fts--configure_db"></a>`configure_db`
+
+Data type: `Boolean`
+
+(optional) Whether to configure the FTS3 database.
+Defaults to true.
+
+Default value: `true`
+
+##### <a name="-fts--configure_firewall"></a>`configure_firewall`
+
+Data type: `Boolean`
+
+(optional) Whether to configure the firewall.
+Defaults to true.
+
+Default value: `true`
+
+##### <a name="-fts--configure_lsc"></a>`configure_lsc`
+
+Data type: `Boolean`
+
+(optional) Whether to install and configure the servers as VOMS clients.
+Defaults to true.
+
+Default value: `true`
+
+##### <a name="-fts--configure_selinux"></a>`configure_selinux`
+
+Data type: `Boolean`
+
+(optional) Whether to configure SELinux.
+Defaults to true.
+
+Default value: `true`
+
+##### <a name="-fts--build_mysql_server"></a>`build_mysql_server`
+
+Data type: `Boolean`
+
+
+
+Default value: `true`
+
+##### <a name="-fts--vo_list"></a>`vo_list`
+
+Data type: `Array`
+
+(optional) List of VOs to configure. Add the VOs to the list.
+Possible values are 'alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam',
+  'escape', 'lhcb', 'ops', 'wlcg'
+Defaults to [None].
+
+Default value: `['cycgno', 'datacloud']`
+
+##### <a name="-fts--build_fts_tables"></a>`build_fts_tables`
+
+Data type: `Boolean`
+
+(optional) Whether to build the FTS3 tables.
+Defaults to true.
+
+Default value: `true`
+
+##### <a name="-fts--grant_privileges"></a>`grant_privileges`
+
+Data type: `Boolean`
+
+(optional) Whether to grant privileges to the FTS and Root user or not on all databases. Defaults to true.
+In order to grant privileges, the MySQL database, the FTS Tables, and user must already exist and the MySQL root
+password must be provided.
+
+Default value: `true`
+
+### <a name="fts--client"></a>`fts::client`
+
+A description of what this class does
+
+#### Examples
+
+##### 
+
+```puppet
+include fts::client
+```
+
+### <a name="fts--database"></a>`fts::database`
+
+@summary: this class configures the fts database. Depending on the parameter choices it can build an fts server, create the
+  database and the user, populate the tables and configure the firewall and selinux.
+
+(required) the root password for the mysql server
+
+(required) the name of the fts database
+
+(required) the hostname of the fts server
+
+(required) the name of the fts database user
+
+(required) the password of the fts database user
+
+(required) the list of the admin users for the fts database
+
+(optional) whether to configure the firewall or not
+
+(optional) whether to configure selinux or not
+
+(optional) whether to build the mysql server or not. Defaults to true.
+
+#### Examples
+
+##### Configure the fts database
+
+```puppet
+class { 'fts::database':
+  db_root_password => 'ftstestpassword',
+  db_name     => 'fts',
+  fts_host    => 'fts-server.infn.it',
+  fts_db_user => 'fts3',
+  fts_db_password => 'ftstestpassword',
+  admin_list  => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri,
+                    '/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Massimo Sgaravatto sgaravat@infn.it'],
+  configure_firewall => true,
+  configure_selinux  => true,
+  build_mysql_server => true,
+  build_fts_tables   => true,
+  grant_privileges   => true,
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `fts::database` class:
+
+* [`db_root_password`](#-fts--database--db_root_password)
+* [`db_name`](#-fts--database--db_name)
+* [`fts_host`](#-fts--database--fts_host)
+* [`fts_db_user`](#-fts--database--fts_db_user)
+* [`fts_db_password`](#-fts--database--fts_db_password)
+* [`admin_list`](#-fts--database--admin_list)
+* [`configure_firewall`](#-fts--database--configure_firewall)
+* [`configure_selinux`](#-fts--database--configure_selinux)
+* [`build_mysql_server`](#-fts--database--build_mysql_server)
+* [`build_fts_tables`](#-fts--database--build_fts_tables)
+* [`grant_privileges`](#-fts--database--grant_privileges)
+
+##### <a name="-fts--database--db_root_password"></a>`db_root_password`
+
+Data type: `String`
+
+
+
+Default value: `'roottestpassword'`
+
+##### <a name="-fts--database--db_name"></a>`db_name`
+
+Data type: `String`
+
+
+
+Default value: `'fts'`
+
+##### <a name="-fts--database--fts_host"></a>`fts_host`
+
+Data type: `String`
+
+
+
+Default value: `'fts-server.infn.it'`
+
+##### <a name="-fts--database--fts_db_user"></a>`fts_db_user`
+
+Data type: `String`
+
+
+
+Default value: `'fts3'`
+
+##### <a name="-fts--database--fts_db_password"></a>`fts_db_password`
+
+Data type: `String`
+
+
+
+Default value: `'ftstestpassword'`
+
+##### <a name="-fts--database--admin_list"></a>`admin_list`
+
+Data type: `Array`
+
+
+
+Default value: `['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it']`
+
+##### <a name="-fts--database--configure_firewall"></a>`configure_firewall`
+
+Data type: `Boolean`
+
+
+
+Default value: `true`
+
+##### <a name="-fts--database--configure_selinux"></a>`configure_selinux`
+
+Data type: `Boolean`
+
+
+
+Default value: `true`
+
+##### <a name="-fts--database--build_mysql_server"></a>`build_mysql_server`
+
+Data type: `Boolean`
+
+
+
+Default value: `true`
+
+##### <a name="-fts--database--build_fts_tables"></a>`build_fts_tables`
+
+Data type: `Boolean`
+
+(optional) Whether to build the FTS tables or not. Defaults to true.
+In order to build the tables, the MySQL database, and user must already exist.
+
+Default value: `true`
+
+##### <a name="-fts--database--grant_privileges"></a>`grant_privileges`
+
+Data type: `Boolean`
+
+(optional) Whether to grant privileges to the FTS and Root user or not on all databases. Defaults to true.
+In order to grant privileges, the MySQL database, the FTS Tables, and user must already exist and the MySQL root
+password must be provided.
+
+Default value: `true`
+
+### <a name="fts--server"></a>`fts::server`
+
+}
+
+#### Examples
+
+##### 
+
+```puppet
+class { 'fts::server':
+  fts_user => 'fts3',
+  fts_db_type => 'mysql',
+  fts_db_username => 'root',
+  fts_db_name => 'fts',
+  fts_db_password => 'ftstestpassword',
+  fts_db_threads_num => 24,
+  fts_server_alias => 'fts3-server',
+  configure_firewall => true,
+```
+
+#### Parameters
+
+The following parameters are available in the `fts::server` class:
+
+* [`fts_user`](#-fts--server--fts_user)
+* [`fts_db_type`](#-fts--server--fts_db_type)
+* [`db_host`](#-fts--server--db_host)
+* [`fts_db_username`](#-fts--server--fts_db_username)
+* [`fts_db_name`](#-fts--server--fts_db_name)
+* [`fts_db_password`](#-fts--server--fts_db_password)
+* [`fts_db_threads_num`](#-fts--server--fts_db_threads_num)
+* [`fts_server_alias`](#-fts--server--fts_server_alias)
+* [`configure_firewall`](#-fts--server--configure_firewall)
+* [`configure_selinux`](#-fts--server--configure_selinux)
+* [`build_fts_tables`](#-fts--server--build_fts_tables)
+
+##### <a name="-fts--server--fts_user"></a>`fts_user`
+
+Data type: `String`
+
+(required) The user that will run the FTS server
+
+Default value: `'fts3'`
+
+##### <a name="-fts--server--fts_db_type"></a>`fts_db_type`
+
+Data type: `String`
+
+(optional) The type of database backend to use
+
+Default value: `'mysql'`
+
+##### <a name="-fts--server--db_host"></a>`db_host`
+
+Data type: `String`
+
+(required) The hostname or IPV4 of the database server
+
+Default value: `'fts-db.infn.it'`
+
+##### <a name="-fts--server--fts_db_username"></a>`fts_db_username`
+
+Data type: `String`
+
+(optional) The username to use to connect to the database
+
+Default value: `'root'`
+
+##### <a name="-fts--server--fts_db_name"></a>`fts_db_name`
+
+Data type: `String`
+
+(optional) The name of the database to use
+
+Default value: `'fts'`
+
+##### <a name="-fts--server--fts_db_password"></a>`fts_db_password`
+
+Data type: `String`
+
+(optional) The password to use to connect to the database
+
+Default value: `'ftstestpassword'`
+
+##### <a name="-fts--server--fts_db_threads_num"></a>`fts_db_threads_num`
+
+Data type: `Integer`
+
+(optional) The number of threads to use for the database backend
+
+Default value: `24`
+
+##### <a name="-fts--server--fts_server_alias"></a>`fts_server_alias`
+
+Data type: `String`
+
+(optional) The alias to use for the FTS server
+
+Default value: `'fts3-server'`
+
+##### <a name="-fts--server--configure_firewall"></a>`configure_firewall`
+
+Data type: `Boolean`
+
+(optional) Whether to configure the firewall or not
+
+Default value: `true`
+
+##### <a name="-fts--server--configure_selinux"></a>`configure_selinux`
+
+Data type: `Boolean`
+
+(optional) Whether to configure SELinux or not
+
+Default value: `true`
+
+##### <a name="-fts--server--build_fts_tables"></a>`build_fts_tables`
+
+Data type: `Boolean`
+
+(optional) Whether to build the FTS tables or not. Defaults to true.
+In order to build the tables, the MySQL database, and user must already exist.
+
+Default value: `true`
+
