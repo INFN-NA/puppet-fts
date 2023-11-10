@@ -91,6 +91,10 @@
 #     'escape', 'lhcb', 'ops', 'wlcg'
 #   Defaults to [None].
 #
+# @param build_fts_tables
+#   (optional) Whether to build the FTS3 tables.
+#   Defaults to true.
+#
 class fts (
   String  $fts_host           = 'fts3-server.infn.it',
   String  $db_host            = 'fts3-db.infn.it',
@@ -108,6 +112,7 @@ class fts (
   Boolean $configure_lsc      = true,
   Boolean $configure_selinux  = true,
   Boolean $build_database     = true,
+  Boolean $build_fts_tables   = true,
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
   if $facts['os']['name'] == 'RedHat' {
@@ -252,17 +257,34 @@ class fts (
     }
   }
   if $configure_fts {
-    # Install the FTS3 server
-    class { 'fts::server':
-      fts_user           => $fts_db_user,
-      fts_db_type        => $fts_db_type,
-      db_host            => $db_host,
-      fts_db_username    => $fts_db_user,
-      fts_db_password    => $fts_db_password,
-      fts_db_threads_num => $fts_db_threads_num,
-      fts_server_alias   => $fts_server_alias,
-      configure_firewall => $configure_firewall,
-      configure_selinux  => $configure_selinux,
+    case $facts['os']['name'] {
+      'RedHat': {
+        case $facts['os']['release']['major'] {
+          '7': {
+            # Install the FTS3 server
+            class { 'fts::server':
+              fts_user           => $fts_db_user,
+              fts_db_type        => $fts_db_type,
+              db_host            => $db_host,
+              fts_db_username    => $fts_db_user,
+              fts_db_password    => $fts_db_password,
+              fts_db_threads_num => $fts_db_threads_num,
+              fts_server_alias   => $fts_server_alias,
+              configure_firewall => $configure_firewall,
+              configure_selinux  => $configure_selinux,
+              build_fts_tables   => $build_fts_tables
+            }
+          }
+          default: {
+            warning("Unsupported Release: ${facts['os']['release']['major']}")
+            warning('Skipping FTS Configuration')
+          }
+        }
+      }
+      default: {
+        warning("Unsupported OS: ${facts['os']['name']} ${facts['os']['release']['major']}")
+        warning('Skipping FTS Configuration')
+      }
     }
   }
 
@@ -277,6 +299,7 @@ class fts (
       configure_firewall => $configure_firewall,
       comfigure_selinux  => $configure_selinux,
       build_database     => $build_database,
+      build_fts_tables   => $build_fts_tables
     }
   }
 }

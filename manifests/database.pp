@@ -34,6 +34,10 @@
 # @param build_database
 # (optional) whether to build the database or not\
 #
+# @param build_fts_tables
+#   (optional) Whether to build the FTS tables or not. Defaults to true.
+#   In order to build the tables, the MySQL database, and user must already exist.
+#
 class fts::database (
   String  $db_password        = 'ftstestpassword',
   String  $db_name            = 'fts',
@@ -43,13 +47,22 @@ class fts::database (
   Boolean $configure_firewall = true,
   Boolean $configure_selinux  = true,
   Boolean $build_database     = true,
+  Boolean $build_fts_tables   = true,
 ) {
   # ------------------------------- SELinux ------------------------------- #
   if $configure_selinux {
-    class { 'selinux':
-      mode => 'permissive',
+    case $facts['os']['name'] {
+      'RedHat': {
+        class { 'selinux':
+          mode => 'permissive',
+        }
+      }
+      default: {
+        warning('Skipping Selinux Configuration, unsupported OS for selinux configuration')
+      }
     }
   }
+
   # instantiate the mysql server
   if $build_database {
     class { 'mysql::server':
@@ -61,20 +74,46 @@ class fts::database (
       },
     }
   }
-# ------------------------------- Dependencies ------------------------------- #
-  package { 'fts-mysql':
-    ensure  => present,
-  }
   # ------------------------------ MariaDB / MySQL ----------------------------- #
-  # create the fts database and user
-  mysql::db { $db_name:
-    ensure   => 'present',
-    user     => $fts_db_user,
-    grant    => ['ALL', 'SUPER'],
-    password => $db_password,
-    name     => $db_name,
-    host     => $::ipaddress,
-    sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
+  # create the fts database and user  
+  # ------------------------------- Dependencies ------------------------------- #
+  if $build_fts_tables {
+    case $facts['os']['name'] {
+      'RedHat': {
+        case $facts['os']['release']['major'] {
+          '7': {
+            package { 'fts-mysql':
+              ensure  => present,
+            }
+            mysql::db { $db_name:
+              ensure   => 'present',
+              user     => $fts_db_user,
+              grant    => ['ALL', 'SUPER'],
+              password => $db_password,
+              name     => $db_name,
+              host     => $::ipaddress,
+              sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
+            }
+          }
+          default: {
+            warning("Database ${db_name} has been created but the tables have not been populated")
+            warning("${facts['os']['name']} ${facts['os']['release']['major']} is an unsupported OS to populate the FTS tables, only RHEL 7 is supported")
+            mysql::db { $db_name:
+              ensure   => 'present',
+              user     => $fts_db_user,
+              grant    => ['ALL', 'SUPER'],
+              password => $db_password,
+              name     => $db_name,
+              host     => $::ipaddress,
+            }
+          }
+        }
+      }
+      default: {
+        warning("Database ${db_name} has been created but the tables have not been populated")
+        warning("${facts['os']['name']} ${facts['os']['release']['major']} is an unsupported OS to populate the FTS tables, only RHEL 7 is supported")
+      }
+    }
   }
   $admin_list.each |$admin| {
     exec { "fts-admins-'${admin}'":

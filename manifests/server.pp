@@ -43,6 +43,11 @@
 #
 # @param configure_selinux
 #   (optional) Whether to configure SELinux or not
+#
+# @param build_fts_tables
+#   (optional) Whether to build the FTS tables or not. Defaults to true.
+#   In order to build the tables, the MySQL database, and user must already exist.
+#
 class fts::server (
   String  $fts_user                 = 'fts3',
   String  $fts_db_type              = 'mysql',
@@ -54,6 +59,7 @@ class fts::server (
   String  $fts_server_alias         = 'fts3-server',
   Boolean $configure_firewall       = true,
   Boolean $configure_selinux        = true,
+  Boolean $build_fts_tables         = true,
 ) {
   $fts_db_connect_string = "${db_host}:3306/${fts_db_name}"
   include cron
@@ -109,6 +115,23 @@ class fts::server (
     source  => 'puppet:///modules/fts/ftsmon.conf',
     require => [Package['fts-monitoring'], Package['httpd']],
   }
+
+# Build the FTS tables remotely
+  if $build_fts_tables {
+    package { 'fts-mysql':
+      ensure  => present,
+    }
+    mysql::db { $fts_db_name:
+      ensure   => 'present',
+      user     => $fts_db_username,
+      grant    => ['ALL', 'SUPER'],
+      password => $fts_db_password,
+      name     => $fts_db_name,
+      host     => $db_host,
+      sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
+    }
+  }
+
   if $configure_firewall {
     include firewall
     firewall {
@@ -169,7 +192,7 @@ class fts::server (
     'fts-record-publisher':
       command => '/etc/cron.daily/fts-record-publisher'
       ;
-}
+  }
   $fts_settings_array = [
     ['User=*',"User=${fts_user}"],
     ['Group=*',"Group=${fts_user}"],
