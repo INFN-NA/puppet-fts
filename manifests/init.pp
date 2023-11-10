@@ -18,6 +18,7 @@
 #     configure_firewall => true,
 #     configure_selinux  => true,
 #     build_mysql_server => true,
+#     build_fts_tables   => true,
 #     grant_privileges   => true,
 #     configure_lsc      => true,
 #     vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
