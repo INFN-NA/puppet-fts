@@ -1,14 +1,20 @@
-# @summary: this class configures the fts database
+# @summary: this class configures the fts database. Depending on the parameter choices it can build an fts server, create the 
+#   database and the user, populate the tables and configure the firewall and selinux.
 #
 # @example Configure the fts database
 #   class { 'fts::database':
-#      db_password => 'ftstestpassword',
-#      db_name     => 'fts',
-#      fts_host    => 'fts-server.infn.it',
-#      fts_db_user => 'fts3',
-#      admin_list  => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri, 
+#     db_root_password => 'ftstestpassword',
+#     db_name     => 'fts',
+#     fts_host    => 'fts-server.infn.it',
+#     fts_db_user => 'fts3',
+#     fts_db_password => 'ftstestpassword',
+#     admin_list  => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri, 
 #                       '/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Massimo Sgaravatto sgaravat@infn.it'],
 #     configure_firewall => true,
+#     configure_selinux  => true,
+#     build_mysql_server => true,
+#     build_fts_tables   => true,
+#     grant_privileges   => true,
 #   }
 # @param db_root_password
 # (required) the root password for the mysql server
@@ -34,13 +40,17 @@
 # @param configure_selinux
 # (optional) whether to configure selinux or not
 #
-# @param build_database
-# (optional) whether to build the database or not\
+# @param build_mysql_server
+# (optional) whether to build the mysql server or not. Defaults to true.
 #
 # @param build_fts_tables
 #   (optional) Whether to build the FTS tables or not. Defaults to true.
 #   In order to build the tables, the MySQL database, and user must already exist.
 #
+# @param grant_privileges
+#   (optional) Whether to grant privileges to the FTS and Root user or not on all databases. Defaults to true.
+#   In order to grant privileges, the MySQL database, the FTS Tables, and user must already exist and the MySQL root 
+#   password must be provided. 
 class fts::database (
   String  $db_root_password   = 'roottestpassword',
   String  $db_name            = 'fts',
@@ -50,8 +60,9 @@ class fts::database (
   Array   $admin_list         = ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
   Boolean $configure_firewall = true,
   Boolean $configure_selinux  = true,
-  Boolean $build_database     = true,
+  Boolean $build_mysql_server = true,
   Boolean $build_fts_tables   = true,
+  Boolean $grant_privileges   = true,
 ) {
   # ------------------------------- SELinux ------------------------------- #
   if $configure_selinux {
@@ -68,7 +79,7 @@ class fts::database (
   }
 
   # instantiate the mysql server
-  if $build_database {
+  if $build_mysql_server {
     class { 'mysql::server':
       root_password    => $db_root_password,
       override_options => {
@@ -144,21 +155,21 @@ class fts::database (
       require => Mysql::Db['fts'],
     }
   }
-  if $build_database {
+  if $grant_privileges {
     exec { 'fts-grant':
-      command => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
-      unless  => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user='${fts_db_user}'@'${fts_host}'\" | grep fts@'${fts_host}'",
+      command => "/usr/bin/mysql --user='root' --password='${db_root_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${fts_db_password}'\"",
+      unless  => "/usr/bin/mysql --user='root' --password='${db_root_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user='${fts_db_user}'@'${fts_host}'\" | grep fts@'${fts_host}'",
       require => Mysql::Db['fts'],
     }
 
     exec { 'fts-super':
-      command => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"GRANT SUPER ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
+      command => "/usr/bin/mysql --user='root' --password='${db_root_password}' --database='${db_name}'  --execute \"GRANT SUPER ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${fts_db_password}'\"",
       require => Exec['fts-grant']
     }
 
     exec { 'root-grant':
-      command => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO root@'${fts_host}' IDENTIFIED BY '${db_password}'\"",
-      unless  => "/usr/bin/mysql --user='root' --password='${fts_db_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user=root@'${fts_host}'\" | grep root@'${fts_host}'",
+      command => "/usr/bin/mysql --user='root' --password='${db_root_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO root@'${fts_host}' IDENTIFIED BY '${db_root_password}'\"",
+      unless  => "/usr/bin/mysql --user='root' --password='${db_root_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user=root@'${fts_host}'\" | grep root@'${fts_host}'",
       require => Mysql::Db['fts'],
     }
 

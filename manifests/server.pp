@@ -47,7 +47,7 @@
 # @param build_fts_tables
 #   (optional) Whether to build the FTS tables or not. Defaults to true.
 #   In order to build the tables, the MySQL database, and user must already exist.
-#
+# 
 class fts::server (
   String  $fts_user                 = 'fts3',
   String  $fts_db_type              = 'mysql',

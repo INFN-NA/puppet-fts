@@ -16,8 +16,10 @@
 #     configure_db       => true,
 #     configure_fts      => true,
 #     configure_firewall => true,
+#     configure_selinux  => true,
+#     build_mysql_server => true,
+#     grant_privileges   => true,
 #     configure_lsc      => true,
-#     build_database     => true,
 #     vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
 #   }
 # 
@@ -78,12 +80,13 @@
 # @param configure_lsc
 #   (optional) Whether to install and configure the servers as VOMS clients.
 #   Defaults to true.
+#
 # @param configure_selinux
 #   (optional) Whether to configure SELinux.
 #   Defaults to true.
 # 
-# @param build_database
-#   (optional) Whether to build the FTS3 database.
+# @param build_mysql_server
+# (optional) whether to build the mysql server or not. Defaults to true.
 #
 # @param vo_list
 #   (optional) List of VOs to configure. Add the VOs to the list.
@@ -95,6 +98,10 @@
 #   (optional) Whether to build the FTS3 tables.
 #   Defaults to true.
 #
+# @param grant_privileges
+#   (optional) Whether to grant privileges to the FTS and Root user or not on all databases. Defaults to true.
+#   In order to grant privileges, the MySQL database, the FTS Tables, and user must already exist and the MySQL root 
+#   password must be provided.
 class fts (
   String  $fts_host           = 'fts3-server.infn.it',
   String  $db_host            = 'fts3-db.infn.it',
@@ -109,10 +116,11 @@ class fts (
   Boolean $configure_db       = true,
   Boolean $configure_fts      = true,
   Boolean $configure_firewall = true,
-  Boolean $configure_lsc      = true,
   Boolean $configure_selinux  = true,
-  Boolean $build_database     = true,
+  Boolean $configure_lsc      = true,
+  Boolean $build_mysql_server = true,
   Boolean $build_fts_tables   = true,
+  Boolean $grant_privileges   = true,
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
   if $facts['os']['name'] == 'RedHat' {
@@ -299,8 +307,9 @@ class fts (
       admin_list         => $admin_list,
       configure_firewall => $configure_firewall,
       comfigure_selinux  => $configure_selinux,
-      build_database     => $build_database,
-      build_fts_tables   => $build_fts_tables
+      build_mysql_server => $build_mysql_server,
+      build_fts_tables   => $build_fts_tables,
+      grant_privileges   => $grant_privileges,
     }
   }
 }
