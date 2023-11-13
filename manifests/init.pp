@@ -133,7 +133,7 @@ class fts (
   Boolean $build_mysql_server = true,
   Boolean $build_fts_tables   = true,
   Boolean $grant_privileges   = true,
-  Boooean $configure_admins   = true,
+  Boolean $configure_admins   = true,
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
   case $facts['os']['name'] {
