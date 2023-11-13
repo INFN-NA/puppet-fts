@@ -120,15 +120,23 @@ class fts::server (
 # Build the FTS tables remotely
   if $build_fts_tables {
     notify { "Building FTS tables on ${db_host}": }
-    mysql::db { $fts_db_name:
-      ensure   => 'present',
+    include mysql::client
+    mysql::sql { 'fts-schema-8.0.1.sql':
+      database => $fts_db_name,
       user     => $fts_user,
-      grant    => ['ALL', 'SUPER'],
-      password => $fts_db_password,
-      name     => $fts_db_name,
       host     => $db_host,
       sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
     }
+
+    #mysql::db { $fts_db_name:
+    #  ensure   => 'present',
+    #  user     => $fts_user,
+    #  grant    => ['ALL', 'SUPER'],
+    #  password => $fts_db_password,
+    #  name     => $fts_db_name,
+    #  host     => $db_host,
+    #  sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
+    #}
   }
 
   if $configure_firewall {
