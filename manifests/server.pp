@@ -120,7 +120,6 @@ class fts::server (
 # Build the FTS tables remotely
   if $build_fts_tables {
     notify { "Building FTS tables on ${db_host}": }
-    include mysql
     mysql::db { $fts_db_name:
       ensure   => 'present',
       user     => $fts_user,
