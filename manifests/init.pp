@@ -6,6 +6,8 @@
 #   class { 'fts':
 #     fts_host           => 'fts3-server.example.org',
 #     db_host            => 'fts3-db.example.org',
+#     db_name            => 'fts',
+#     db_root_user       => 'root',
 #     db_root_password   => 'roottestpassword',
 #     fts_db_password    => 'ftstestpassword',
 #     fts_db_user        => 'fts3',
@@ -39,6 +41,9 @@
 # @param db_name
 #   (required) The name of the FTS3 database.
 #   Defaults to 'fts'.
+# 
+# @param db_root_user
+#   (required) The username of the MySQL root user.
 #
 # @param db_root_password
 #   (required) The password of the MySQL root user.
@@ -107,6 +112,7 @@ class fts (
   String  $fts_host           = 'fts3-server.infn.it',
   String  $db_host            = 'fts3-db.infn.it',
   String  $db_name            = 'fts',
+  String  $db_root_user       = 'root',
   String  $db_root_password   = 'dbrootpassword',
   String  $fts_db_user        = 'fts3',
   String  $fts_db_password    = 'ftstestpassword',
@@ -286,7 +292,8 @@ class fts (
               fts_user           => $fts_db_user,
               fts_db_type        => $fts_db_type,
               db_host            => $db_host,
-              fts_db_username    => $fts_db_user,
+              db_root_user       => $db_root_user,
+              fts_db_name        => $db_name,
               fts_db_password    => $fts_db_password,
               fts_db_threads_num => $fts_db_threads_num,
               fts_server_alias   => $fts_server_alias,
@@ -310,6 +317,7 @@ class fts (
   if $configure_db {
     notify { 'Configuring Database': }
     class { 'fts::database':
+      db_root_user       => $db_root_user,
       db_root_password   => $db_root_password,
       db_name            => $db_name,
       fts_host           => $fts_host,

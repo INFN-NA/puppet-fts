@@ -6,7 +6,8 @@
 #   class { 'fts::server':
 #     fts_user => 'fts3',
 #     fts_db_type => 'mysql',
-#     fts_db_username => 'root',
+#     db_host => 'fts-db.infn.it',
+#     db_root_user => 'root',
 #     fts_db_name => 'fts',
 #     fts_db_password => 'ftstestpassword',
 #     fts_db_threads_num => 24,
@@ -23,8 +24,8 @@
 # @param db_host
 #   (required) The hostname or IPV4 of the database server
 #
-# @param fts_db_username
-#   (optional) The username to use to connect to the database
+# @param db_root_user
+#   (optional) The MySQL root user name
 #
 # @param fts_db_name
 #   (optional) The name of the database to use
@@ -52,7 +53,7 @@ class fts::server (
   String  $fts_user                 = 'fts3',
   String  $fts_db_type              = 'mysql',
   String  $db_host                  = 'fts-db.infn.it',
-  String  $fts_db_username          = 'root',
+  String  $db_root_user             = 'root',
   String  $fts_db_name              = 'fts',
   String  $fts_db_password          = 'ftstestpassword',
   Integer $fts_db_threads_num       = 24,
@@ -118,9 +119,10 @@ class fts::server (
 
 # Build the FTS tables remotely
   if $build_fts_tables {
+    notify { "Building FTS tables on ${db_host}": }
     mysql::db { $fts_db_name:
       ensure   => 'present',
-      user     => $fts_db_username,
+      user     => $fts_user,
       grant    => ['ALL', 'SUPER'],
       password => $fts_db_password,
       name     => $fts_db_name,
@@ -130,6 +132,7 @@ class fts::server (
   }
 
   if $configure_firewall {
+    notify { 'Configuring firewall': }
     include firewall
     firewall {
       '00000 accept all icmp':
@@ -194,7 +197,7 @@ class fts::server (
     ['User=*',"User=${fts_user}"],
     ['Group=*',"Group=${fts_user}"],
     ['DbType=*',"DbType=${fts_db_type}"],
-    ['DbUserName=*',"DbUserName=${fts_db_username}"],
+    ['DbUserName=*',"DbUserName=${fts_user}"],
     ['DbPassword=*',"DbPassword=${fts_db_password}"],
     ['DbConnectString=*', "DbConnectString=${fts_db_connect_string}"],
     ['DbThreadsNum=*',"DbThreadsNum=${fts_db_threads_num}"],
@@ -211,7 +214,7 @@ class fts::server (
   }
 
   $fts_rest_settings_array = [
-    ['DbUserName = *',"DbUserName=${fts_db_username}"],
+    ['DbUserName = *',"DbUserName=${fts_user}"],
 
     ['DbPassword = *',"DbPassword=${fts_db_password}"],
 
