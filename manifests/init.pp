@@ -193,14 +193,12 @@ class fts (
           }
         }
         default: {
-          warning("Unsupported Release: ${facts['os']['release']['major']}")
-          warning('Skipping FTS Repositories and Dependencies')
+          notify { "Unsupported Release: ${facts['os']['release']['major']}, Skipping FTS Repositories and Dependencies": }
         }
       }
     }
     default: {
-      warning("Unsupported OS: ${facts['os']['name']} ${facts['os']['release']['major']}")
-      warning('Skipping FTS Repositories and Dependencies')
+      notify { "Unsupported OS: ${facts['os']['name']}, Skipping FTS Repositories and Dependencies": }
     }
   }
   # Configure the VOMS VOs
