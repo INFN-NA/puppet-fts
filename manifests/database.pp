@@ -56,6 +56,11 @@
 #   (optional) Whether to grant privileges to the FTS and Root user or not on all databases. Defaults to true.
 #   In order to grant privileges, the MySQL database, the FTS Tables, and user must already exist and the MySQL root 
 #   password must be provided. 
+#
+# @param configure_admins
+#   (optional) Whether to configure the FTS admins or not. Defaults to true.
+#   In order to configure the admins, the MySQL database, the FTS Tables, and user must already exist.
+#
 class fts::database (
   String  $db_root_user       = 'root',
   String  $db_root_password   = 'roottestpassword',
@@ -69,6 +74,7 @@ class fts::database (
   Boolean $build_mysql_server = true,
   Boolean $build_fts_tables   = true,
   Boolean $grant_privileges   = true,
+  Boolean $configure_admins   = true,
 ) {
   # ------------------------------- SELinux ------------------------------- #
   if $configure_selinux {
@@ -156,12 +162,16 @@ class fts::database (
       host     => $::ipaddress,
     }
   }
-  # ------------------------------ FTS Tables ----------------------------- #
-  $admin_list.each |$admin| {
-    exec { "fts-admins-'${admin}'":
-      command => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"INSERT INTO t_authz_dn  (dn, operation) VALUES ('${admin}', 'config')\"",
-      unless  => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"SELECT * FROM t_authz_dn WHERE dn='${admin}' AND operation='config'\" | grep '${admin}'",
-      require => Mysql::Db['fts'],
+  # ------------------------------ Admins and Privileges ----------------------------- #
+
+  if $configure_admins {
+    notify { 'Configuring FTS Admins': }
+    $admin_list.each |$admin| {
+      exec { "fts-admins-'${admin}'":
+        command => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"INSERT INTO t_authz_dn  (dn, operation) VALUES ('${admin}', 'config')\"",
+        unless  => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"SELECT * FROM t_authz_dn WHERE dn='${admin}' AND operation='config'\" | grep '${admin}'",
+        require => Mysql::Db['fts'],
+      }
     }
   }
   if $grant_privileges {

@@ -22,6 +22,7 @@
 #     build_mysql_server => true,
 #     build_fts_tables   => true,
 #     grant_privileges   => true,
+#     configure_admins   => true,
 #     configure_lsc      => true,
 #     vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
 #   }
@@ -83,6 +84,10 @@
 #   (optional) Whether to configure the firewall.
 #   Defaults to true.
 #
+# @param configure_admins
+#   (optional) Whether to configure the FTS3 administrators.
+#   Defaults to true.
+#
 # @param configure_lsc
 #   (optional) Whether to install and configure the servers as VOMS clients.
 #   Defaults to true.
@@ -128,6 +133,7 @@ class fts (
   Boolean $build_mysql_server = true,
   Boolean $build_fts_tables   = true,
   Boolean $grant_privileges   = true,
+  Boooean $configure_admins   = true,
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
   case $facts['os']['name'] {
@@ -328,6 +334,7 @@ class fts (
       build_mysql_server => $build_mysql_server,
       build_fts_tables   => $build_fts_tables,
       grant_privileges   => $grant_privileges,
+      configure_admins   => $configure_admins,
     }
   }
 }
