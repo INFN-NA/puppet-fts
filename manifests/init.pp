@@ -324,7 +324,7 @@ class fts (
       fts_db_password    => $fts_db_password,
       admin_list         => $admin_list,
       configure_firewall => $configure_firewall,
-      comfigure_selinux  => $configure_selinux,
+      configure_selinux  => $configure_selinux,
       build_mysql_server => $build_mysql_server,
       build_fts_tables   => $build_fts_tables,
       grant_privileges   => $grant_privileges,
