@@ -16,15 +16,16 @@ on a couple of Hosts.
 
 * Setup two machines with CentOS 7 (puppet agents, not constrained to CentOS 7);
 * Install puppet agent on both machines:
-    a. CentOS:
-        1. add the puppet repo `rpm -Uvh https://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm`;
-        2. install the puppet agent and vim packages (`yum install -y puppet-agent vim`)
-    b. Ubuntu: 
-        1. wget https://apt.puppet.com/puppet7-release-focal.deb
-        2. sudo dpkg -i puppet7-release-focal.deb
-        3. sudo apt update && sudo apt install puppet-agent vim 
-    3. Reload your /etc/profile to update $PATH or run puppet agent by absolute path
-    4. create the `certificates` folder in the root path and copy there your site `hostcert.pem` and `hostkey.pem`;
+* CentOS:
+1. add the puppet repo `rpm -Uvh https://yum.puppetlabs.com/puppet7/puppet7-release-el-7.noarch.rpm`;
+
+2. install the puppet agent and vim packages (`yum install -y puppet-agent vim`)
+* Ubuntu:
+1. wget https://apt.puppet.com/puppet7-release-focal.deb
+2. sudo dpkg -i puppet7-release-focal.deb
+3. sudo apt update && sudo apt install puppet-agent vim
+* Reload your /etc/profile to update $PATH or run puppet agent by absolute path
+* create the `certificates` folder in the root path and copy there your site `hostcert.pem` and `hostkey.pem`;
 * Employ the `fts` class to configure the FTS server and the MySQL database on the nodes, see the `fts=db.pp` and `fts-server.pp` in examples for some reference;
 * Add the following modules in your puppetfile:
 
