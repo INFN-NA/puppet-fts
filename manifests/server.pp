@@ -117,10 +117,9 @@ class fts::server (
     notify { "Building FTS tables on ${db_host}": }
     include mysql::client
     exec { 'fts-mysql-schema':
-      command     => "/usr/bub/mysql --user='${fts_user}' --password='${fts_db_password}'' --host='${db_host}'' --database='${fts_db_name}' < /usr/share/fts-mysql/fts-schema-8.0.1.sql",
-      path        => ['/usr/bin', '/usr/sbin'],
-      refreshonly => true,
-      require     => Package['fts-mysql'],
+      command => "/usr/bub/mysql --user='${fts_user}' --password='${fts_db_password}'' --host='${db_host}'' --database='${fts_db_name}' < /usr/share/fts-mysql/fts-schema-8.0.1.sql",
+      path    => ['/usr/bin', '/usr/sbin'],
+      require => Package['fts-mysql'],
     }
   }
   if $configure_firewall {

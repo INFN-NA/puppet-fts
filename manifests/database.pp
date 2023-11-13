@@ -156,6 +156,7 @@ class fts::database (
       host     => $::ipaddress,
     }
   }
+  # ------------------------------ FTS Tables ----------------------------- #
   $admin_list.each |$admin| {
     exec { "fts-admins-'${admin}'":
       command => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"INSERT INTO t_authz_dn  (dn, operation) VALUES ('${admin}', 'config')\"",
