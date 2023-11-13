@@ -194,7 +194,7 @@ class fts::database (
     }
 
     exec { 'flush privileges':
-      command => "/usr/bin/mysql --user='${db_root_user}' --password='${fts_db_password}' --database='${db_name}'  --execute \"FLUSH PRIVILEGES\"",
+      command => "/usr/bin/mysql --user='${db_root_user}' --password='${db_root_password}' --database='${db_name}'  --execute \"FLUSH PRIVILEGES\"",
       require => [Exec['fts-grant'], Exec['root-grant']],
     }
   }
