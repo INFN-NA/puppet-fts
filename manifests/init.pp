@@ -292,7 +292,6 @@ class fts (
               fts_user           => $fts_db_user,
               fts_db_type        => $fts_db_type,
               db_host            => $db_host,
-              db_root_user       => $db_root_user,
               fts_db_name        => $db_name,
               fts_db_password    => $fts_db_password,
               fts_db_threads_num => $fts_db_threads_num,

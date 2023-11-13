@@ -7,7 +7,6 @@
 #     fts_user => 'fts3',
 #     fts_db_type => 'mysql',
 #     db_host => 'fts-db.infn.it',
-#     db_root_user => 'root',
 #     fts_db_name => 'fts',
 #     fts_db_password => 'ftstestpassword',
 #     fts_db_threads_num => 24,
@@ -23,9 +22,6 @@
 #
 # @param db_host
 #   (required) The hostname or IPV4 of the database server
-#
-# @param db_root_user
-#   (optional) The MySQL root user name
 #
 # @param fts_db_name
 #   (optional) The name of the database to use
