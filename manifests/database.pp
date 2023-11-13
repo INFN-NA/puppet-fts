@@ -72,6 +72,7 @@ class fts::database (
 ) {
   # ------------------------------- SELinux ------------------------------- #
   if $configure_selinux {
+    notify { 'Configuring Selinux': }
     case $facts['os']['name'] {
       'CentOS': {
         class { 'selinux':
@@ -86,6 +87,7 @@ class fts::database (
 
   # instantiate the mysql server
   if $build_mysql_server {
+    notify { 'Building MySQL Server': }
     class { 'mysql::server':
       root_password    => $db_root_password,
       override_options => {
@@ -144,7 +146,7 @@ class fts::database (
     }
   }
   else {
-    notify { 'Checking FTS Database': }
+    notify { 'Checking / Creating FTS Database': }
     mysql::db { $db_name:
       ensure   => 'present',
       user     => $fts_db_user,
