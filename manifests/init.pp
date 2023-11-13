@@ -125,7 +125,7 @@ class fts (
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
   case $facts['os']['name'] {
-    'RedHat': {
+    'CentOS': {
       case $facts['os']['release']['major'] {
         '7': {
           # Install the EPEL repository
@@ -193,18 +193,18 @@ class fts (
           }
         }
         default: {
-          notify { "Unsupported Release: ${facts['os']['release']['major']}, Skipping FTS Repositories and Dependencies": }
+          notify { "Unsupported Release: ${facts['os']['release']['major']}, skipping FTS Repositories and Dependencies": }
         }
       }
     }
     default: {
-      notify { "Unsupported OS: ${facts['os']['name']}, Skipping FTS Repositories and Dependencies": }
+      notify { "Unsupported OS: ${facts['os']['name']}, skipping FTS Repositories and Dependencies": }
     }
   }
   # Configure the VOMS VOs
   if $configure_lsc {
     case $facts['os']['name'] {
-      'RedHat': {
+      'CentOS': {
         case $facts['os']['release']['major'] {
           '7': {
             $vo_list.each |$vo| {
@@ -258,26 +258,24 @@ class fts (
                   include voms::wlcg
                 }
                 default: {
-                  warning("Unknown VO: ${vo}")
+                  notify { "Unknown VO: ${vo}": }
                 }
               }
             }
           }
           default: {
-            warning("Unsupported Release: ${facts['os']['release']['major']}")
-            warning('Skipping LSC Configuration')
+            notify { "Unsupported Release: ${facts['os']['release']['major']}, skipping LSC Configuration": }
           }
         }
       }
       default: {
-        warning("Unsupported OS: ${facts['os']['name']} ${facts['os']['release']['major']}")
-        warning('Skipping LSC Configuration')
+        notify { "Unsupported OS: ${facts['os']['name']}, skipping LSC Configuration": }
       }
     }
   }
   if $configure_fts {
     case $facts['os']['name'] {
-      'RedHat': {
+      'CentOS': {
         case $facts['os']['release']['major'] {
           '7': {
             # Install the FTS3 server
@@ -295,14 +293,12 @@ class fts (
             }
           }
           default: {
-            warning("Unsupported Release: ${facts['os']['release']['major']}")
-            warning('Skipping FTS Configuration')
+            notify { "Unsupported Release: ${facts['os']['release']['major']}, skipping FTS Configuration": }
           }
         }
       }
       default: {
-        warning("Unsupported OS: ${facts['os']['name']} ${facts['os']['release']['major']}")
-        warning('Skipping FTS Configuration')
+        notify { "Unsupported OS: ${facts['os']['name']}, skipping FTS Configuration": }
       }
     }
   }

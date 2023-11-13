@@ -67,13 +67,13 @@ class fts::database (
   # ------------------------------- SELinux ------------------------------- #
   if $configure_selinux {
     case $facts['os']['name'] {
-      'RedHat': {
+      'CentOS': {
         class { 'selinux':
           mode => 'permissive',
         }
       }
       default: {
-        warning('Skipping Selinux Configuration, unsupported OS for selinux configuration')
+        notify { "Unsupported OS: ${facts['os']['name']}, skipping Selinux Configuration": }
       }
     }
   }
@@ -94,7 +94,7 @@ class fts::database (
   # ------------------------------- Dependencies ------------------------------- #
   if $build_fts_tables {
     case $facts['os']['name'] {
-      'RedHat': {
+      'CentOS': {
         case $facts['os']['release']['major'] {
           '7': {
             package { 'fts-mysql':
@@ -111,8 +111,7 @@ class fts::database (
             }
           }
           default: {
-            warning("Database ${db_name} has been created but the tables have not been populated")
-            warning("${facts['os']['name']} ${facts['os']['release']['major']} is an unsupported OS to populate the FTS tables, only RHEL 7 is supported")
+            notify { "Unsupported Release: ${facts['os']['release']['major']}, database created but skipping FTS Tables Creation": }
             mysql::db { $db_name:
               ensure   => 'present',
               user     => $fts_db_user,
@@ -125,8 +124,7 @@ class fts::database (
         }
       }
       default: {
-        warning("Database ${db_name} has been created but the tables have not been populated")
-        warning("${facts['os']['name']} ${facts['os']['release']['major']} is an unsupported OS to populate the FTS tables, only RHEL 7 is supported")
+        notify { "Unsupported OS: ${facts['os']['name']}, database created but skipping FTS Tables Creation": }
         mysql::db { $db_name:
           ensure   => 'present',
           user     => $fts_db_user,
