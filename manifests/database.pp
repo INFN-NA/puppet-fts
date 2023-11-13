@@ -93,6 +93,7 @@ class fts::database (
   # create the fts database and user  
   # ------------------------------- Dependencies ------------------------------- #
   if $build_fts_tables {
+    notify { 'Checking FTS Database and populating FTS Tables': }
     case $facts['os']['name'] {
       'CentOS': {
         case $facts['os']['release']['major'] {
@@ -137,6 +138,7 @@ class fts::database (
     }
   }
   else {
+    notify { 'Checking FTS Database': }
     mysql::db { $db_name:
       ensure   => 'present',
       user     => $fts_db_user,
@@ -154,6 +156,7 @@ class fts::database (
     }
   }
   if $grant_privileges {
+    notify { 'Granting privileges': }
     exec { 'fts-grant':
       command => "/usr/bin/mysql --user='root' --password='${db_root_password}' --database='${db_name}'  --execute \"GRANT ALL ON *.* TO '${fts_db_user}'@'${fts_host}' IDENTIFIED BY '${fts_db_password}'\"",
       unless  => "/usr/bin/mysql --user='root' --password='${db_root_password}' --database='${db_name}'  --execute \"SELECT * FROM mysql.user WHERE user='${fts_db_user}'@'${fts_host}'\" | grep fts@'${fts_host}'",
@@ -178,6 +181,7 @@ class fts::database (
   }
   # ------------------------------ Firewall ----------------------------- #
   if $configure_firewall {
+    notify { 'Configuring Firewall': }
     include firewall
     firewall {
       '00000 accept all icmp':
@@ -214,4 +218,5 @@ class fts::database (
       before => undef,
     }
   }
+  notify { 'FTS Database Configuration Complete': }
 }

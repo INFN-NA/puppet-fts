@@ -250,4 +250,5 @@ class fts::server (
     'fts-msg-bulk':
       ;
   }
+  notify { 'FTS server installed, please run fetch-crl - 99 and restart httpd': }
 }

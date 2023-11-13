@@ -128,6 +128,7 @@ class fts (
     'CentOS': {
       case $facts['os']['release']['major'] {
         '7': {
+          notify { 'Configuring Repositories and Dependencies': }
           # Install the EPEL repository
           package {
             default:
@@ -203,6 +204,7 @@ class fts (
   }
   # Configure the VOMS VOs
   if $configure_lsc {
+    notify { "Configuring VOMS VOs: ${vo_list}": }
     case $facts['os']['name'] {
       'CentOS': {
         case $facts['os']['release']['major'] {
@@ -274,6 +276,7 @@ class fts (
     }
   }
   if $configure_fts {
+    notify { 'Configuring FTS3 Server': }
     case $facts['os']['name'] {
       'CentOS': {
         case $facts['os']['release']['major'] {
@@ -305,6 +308,7 @@ class fts (
 
   # Install the MySQL server and configure the FTS3 database
   if $configure_db {
+    notify { 'Configuring Database': }
     class { 'fts::database':
       db_root_password   => $db_root_password,
       db_name            => $db_name,
