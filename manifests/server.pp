@@ -118,9 +118,6 @@ class fts::server (
 
 # Build the FTS tables remotely
   if $build_fts_tables {
-    package { 'fts-mysql':
-      ensure  => present,
-    }
     mysql::db { $fts_db_name:
       ensure   => 'present',
       user     => $fts_db_username,
