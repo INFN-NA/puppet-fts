@@ -53,7 +53,6 @@ class fts::server (
   String  $fts_user                 = 'fts3',
   String  $fts_db_type              = 'mysql',
   String  $db_host                  = 'fts-db.infn.it',
-  String  $db_root_user             = 'root',
   String  $fts_db_name              = 'fts',
   String  $fts_db_password          = 'ftstestpassword',
   Integer $fts_db_threads_num       = 24,
@@ -121,25 +120,13 @@ class fts::server (
   if $build_fts_tables {
     notify { "Building FTS tables on ${db_host}": }
     include mysql::client
-    mysql::sql { 'fts-schema-8.0.1.sql':
-      database => $fts_db_name,
-      user     => $fts_user,
-      password => $fts_db_password,
-      host     => $db_host,
-      sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
+    exec { 'fts-mysql-schema':
+      command     => "/usr/bub/mysql --user='${fts_user}' --password='${fts_db_password}'' --host='${db_host}'' --database='${fts_db_name}' --execute='/usr/share/fts-mysql/fts-schema-8.0.1.sql'",
+      path        => ['/usr/bin', '/usr/sbin'],
+      refreshonly => true,
+      require     => Package['fts-mysql'],
     }
-
-    #mysql::db { $fts_db_name:
-    #  ensure   => 'present',
-    #  user     => $fts_user,
-    #  grant    => ['ALL', 'SUPER'],
-    #  password => $fts_db_password,
-    #  name     => $fts_db_name,
-    #  host     => $db_host,
-    #  sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
-    #}
   }
-
   if $configure_firewall {
     notify { 'Configuring firewall': }
     include firewall
