@@ -124,6 +124,7 @@ class fts::server (
     mysql::sql { 'fts-schema-8.0.1.sql':
       database => $fts_db_name,
       user     => $fts_user,
+      password => $fts_db_password,
       host     => $db_host,
       sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
     }
