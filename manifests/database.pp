@@ -156,7 +156,7 @@ class fts::database (
           ensure  => file,
           source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
           require => File['/etc/share/fts-mysql']
-          }
+        }
         mysql::db { $db_name:
           ensure   => 'present',
           user     => $fts_db_user,
