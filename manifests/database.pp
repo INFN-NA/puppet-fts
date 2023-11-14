@@ -126,7 +126,15 @@ class fts::database (
             }
           }
           default: {
-            notify { "Unsupported Release: ${facts['os']['release']['major']}, database created but skipping FTS Tables Creation": }
+            notify { "Unsupported Release: ${facts['os']['release']['major']}, database created AND using sql schema 8.0.1 from puppet": }
+            file { '/etc/share/fts-mysql':
+              ensure => directory,
+            }
+            file { '/usr/share/fts-mysql/fts-schema-8.0.1.sql':
+              ensure  => file,
+              source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
+              require => File['/etc/share/fts-mysql']
+            }
             mysql::db { $db_name:
               ensure   => 'present',
               user     => $fts_db_user,
@@ -134,12 +142,21 @@ class fts::database (
               password => $fts_db_password,
               name     => $db_name,
               host     => $::ipaddress,
+              sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql']
             }
           }
         }
       }
       default: {
         notify { "Unsupported OS: ${facts['os']['name']}, database created but skipping FTS Tables Creation": }
+        file { '/etc/share/fts-mysql':
+          ensure => directory,
+        }
+        file { '/usr/share/fts-mysql/fts-schema-8.0.1.sql':
+          ensure  => file,
+          source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
+          require => File['/etc/share/fts-mysql']
+          }
         mysql::db { $db_name:
           ensure   => 'present',
           user     => $fts_db_user,
