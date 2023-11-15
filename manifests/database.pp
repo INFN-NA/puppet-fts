@@ -21,70 +21,70 @@
 #   }
 #
 # @param db_root_user
-# (optional) the root user for the mysql server,
-# defaults to root. If the mysql server is not built, 
-# or grants to the root and fts users must not be given 
-# becouse the database alredy exists, this parameter is ignored.
+#   (optional) the root user for the mysql server,
+#   defaults to root. If the mysql server is not built, 
+#   or grants to the root and fts users must not be given 
+#   becouse the database alredy exists, this parameter is ignored.
 #
 # @param db_root_password
-# (optional) the root password for the mysql server. 
-# Defaults to roottestpassword. If the mysql server is not built,
-# or grants to the root and fts users must not be given 
-# becouse the database alredy exists, this parameter is ignored.
+#   (optional) the root password for the mysql server. 
+#   Defaults to roottestpassword. If the mysql server is not built,
+#   or grants to the root and fts users must not be given 
+#   becouse the database alredy exists, this parameter is ignored.
 #
 # @param db_name
-# (required) the name of the fts database. 
-# defaults to fts. The database will be created if it does not exist.
+#   (required) the name of the fts database. 
+#   defaults to fts. The database will be created if it does not exist.
 #
 # @param fts_host
-# (required) the hostname of the fts server. This can be the FQDN or 
-# the IP address of the machine hosting the mysql db. 
+#   (required) the hostname of the fts server. This can be the FQDN or 
+#   the IP address of the machine hosting the mysql db. 
 #
 # @param fts_db_user
-# (required) The user that will run the FTS server.
-# defaults to fts3.
+#   (required) The user that will run the FTS server.
+#   defaults to fts3.
 #
 # @param fts_db_password
-# (optional) the password of the fts database user. 
-# defaults to ftstestpassword. Please change this parameter to a secure password.
+#   (optional) the password of the fts database user. 
+#   defaults to ftstestpassword. Please change this parameter to a secure password.
 #
 # @param admin_list
-# (required) the list of the admin users for the fts database. In order for the fts server to work,
-# at least one admin user must be configured. The admin user must be in the form of a DN.
-# Admins will be created if they do not exist only if the FTS database has been populated with tables
-# through the build_fts_tables parameter.
+#   (required) the list of the admin users for the fts database. In order for the fts server to work,
+#   at least one admin user must be configured. The admin user must be in the form of a DN.
+#   Admins will be created if they do not exist only if the FTS database has been populated with tables
+#   through the build_fts_tables parameter.
 #
 # @param configure_firewall
-# (optional) whether to configure the firewall or not. 
-# defaults to true. The firewall will be configured to allow access only to the mysql server.
+#   (optional) whether to configure the firewall or not. 
+#   defaults to true. The firewall will be configured to allow access only to the mysql server.
 #
 # @param configure_selinux
-# (optional) whether to configure selinux or not.
-# defaults to true. Selinux will be configured to permissive mode.
+#   (optional) whether to configure selinux or not.
+#   defaults to true. Selinux will be configured to permissive mode.
 #
 # @param build_mysql_server
-# (optional) whether to build the mysql server or not. 
-# defaults to true. if the mysql server is not built, the script assumes that 
-# a mysql server is already running on the machine and that the root user and password are valid.
+#   (optional) whether to build the mysql server or not. 
+#   defaults to true. if the mysql server is not built, the script assumes that 
+#   a mysql server is already running on the machine and that the root user and password are valid.
 #
 # @param build_fts_tables
-# (optional) Whether to build the FTS tables or not. d
-# defaults to true. The script in either case will create and/or check the presente of the 
-# fts database and the user. If the parameter is set to true, the fts database will be populated
-# with the tables needed for the fts server to work. If the parameter is set to false, the script will
-# only check the presence of the fts database and the user.
+#   (optional) Whether to build the FTS tables or not. d
+#   defaults to true. The script in either case will create and/or check the presente of the 
+#   fts database and the user. If the parameter is set to true, the fts database will be populated
+#   with the tables needed for the fts server to work. If the parameter is set to false, the script will
+#   only check the presence of the fts database and the user.
 #  
 # @param grant_privileges
-# (optional) Whether to grant privileges to the FTS and root user on the database. 
-# defaults to true. In order to grant privileges, the MySQL database, the FTS Tables, 
-# and user must already exist and the MySQL root user and password must be provided. 
-# Correct privileges to the fts database for, at least, the fts user are neeed for the fts server 
-# to work. So, if the parameter is set to false, make sure to grant privilegs manually. 
+#   (optional) Whether to grant privileges to the FTS and root user on the database. 
+#   defaults to true. In order to grant privileges, the MySQL database, the FTS Tables, 
+#   and user must already exist and the MySQL root user and password must be provided. 
+#   Correct privileges to the fts database for, at least, the fts user are neeed for the fts server 
+#   to work. So, if the parameter is set to false, make sure to grant privilegs manually. 
 #
 # @param configure_admins
-# (optional) Whether to configure the FTS admins or not. 
-# defaults to true. In order to configure the admins, the MySQL database, 
-# the FTS Tables, and user must already exist.
+#   (optional) Whether to configure the FTS admins or not. 
+#   defaults to true. In order to configure the admins, the MySQL database, 
+#   the FTS Tables, and user must already exist.
 #
 class fts::database (
   String  $db_root_user       = 'root',
