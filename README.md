@@ -68,35 +68,9 @@ mod 'nasd-fts', '0.1.6'
 ## Usage
 The module can be used to configure both the database and fts server on the same machine, or on two different
 machines. For the latter use case, to configure the fts server only, set `configure_db` to false, and to configure
-the mysql database only, set `configure_fts` to false. Check the examples to see two .pp files configuring both the server
-and the database.
+the mysql database only, set `configure_fts` to false. The exaples folder contains several exemplary manifests.
 
-``` .puppet 
-# @example
-#   class { 'fts':
-#     fts_host           => 'fts3-server.example.org',
-#     db_host            => 'fts3-db.example.org',
-#     db_root_password   => 'roottestpassword',
-#     fts_db_password    => 'ftstestpassword',
-#     fts_db_user        => 'fts3',
-#     fts_db_type        => 'mysql',
-#     fts_server_alias   => 'fts3-server',
-#     admin_list         => ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it'],
-#     fts_db_threads_num => 24,
-#     configure_db       => false,
-#     configure_fts      => true,
-#     configure_firewall => true,
-#     configure_selinux  => true,
-#     build_mysql_server => true,
-#     build_fts_tables   => true,
-#     grant_privileges   => true,
-#     configure_lsc      => true,
-#     vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
-#   }
 
-```
-
-The check the fts class parameter, please take a look at the REFERENCE.md file. 
 ## Limitations
 
 It works only on CentOS 7 distributions.

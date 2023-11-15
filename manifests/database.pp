@@ -158,7 +158,7 @@ class fts::database (
             file { '/usr/share/fts-mysql/fts-schema-8.0.1.sql':
               ensure  => file,
               source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
-              require => File['/etc/share/fts-mysql']
+              require => File['/etc/share/fts-mysql'],
             }
             mysql::db { $db_name:
               ensure   => 'present',
@@ -180,7 +180,7 @@ class fts::database (
         file { '/usr/share/fts-mysql/fts-schema-8.0.1.sql':
           ensure  => file,
           source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
-          require => File['/etc/share/fts-mysql']
+          require => File['/etc/share/fts-mysql'],
         }
         mysql::db { $db_name:
           ensure   => 'present',
