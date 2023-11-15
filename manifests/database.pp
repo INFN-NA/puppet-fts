@@ -156,15 +156,15 @@ class fts::database (
               default:
                 ensure => directory,
                 ;
-              'etc/share':
+              '/usr/share/':
                 ;
-              '/etc/share/fts-mysql':
+              '/usr/share/fts-mysql':
                 ;
             }
             file { '/usr/share/fts-mysql/fts-schema-8.0.1.sql':
               ensure  => file,
               source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
-              require => File['/etc/share/fts-mysql'],
+              require => File['/usr/share/fts-mysql'],
             }
             mysql::db { $db_name:
               ensure   => 'present',
@@ -184,15 +184,15 @@ class fts::database (
           default:
             ensure => directory,
             ;
-          'etc/share':
+          '/etc/share':
             ;
-          '/etc/share/fts-mysql':
+          '/usr/share/fts-mysql':
             ;
         }
         file { '/usr/share/fts-mysql/fts-schema-8.0.1.sql':
           ensure  => file,
           source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
-          require => File['/etc/share/fts-mysql'],
+          require => File['/usr/share/fts-mysql'],
         }
         mysql::db { $db_name:
           ensure   => 'present',
