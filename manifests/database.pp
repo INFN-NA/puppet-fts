@@ -1,5 +1,7 @@
-# @summary: this class configures the fts database. Depending on the parameter choices it can build an fts server, create the 
-#   database and the user, populate the tables and configure the firewall and selinux.
+# @summary: this class can create and configures the mysql fts database. Depending on the parameter choices,
+#   it can create an mysql server, create and configure the fts
+#   database and the user, populate it with tables, add admins,  
+#   and configure the firewall and selinux.
 #
 # @example Configure the fts database
 #   class { 'fts::database':
@@ -19,47 +21,70 @@
 #   }
 #
 # @param db_root_user
-# (required) the root user for the mysql server
+# (optional) the root user for the mysql server,
+# defaults to root. If the mysql server is not built, 
+# or grants to the root and fts users must not be given 
+# becouse the database alredy exists, this parameter is ignored.
 #
 # @param db_root_password
-# (required) the root password for the mysql server
+# (optional) the root password for the mysql server. 
+# Defaults to roottestpassword. If the mysql server is not built,
+# or grants to the root and fts users must not be given 
+# becouse the database alredy exists, this parameter is ignored.
 #
 # @param db_name
-# (required) the name of the fts database
+# (required) the name of the fts database. 
+# defaults to fts. The database will be created if it does not exist.
 #
 # @param fts_host
-# (required) the hostname of the fts server
+# (required) the hostname of the fts server. This can be the FQDN or 
+# the IP address of the machine hosting the mysql db. 
 #
 # @param fts_db_user
-# (required) the name of the fts database user
+# (required) The user that will run the FTS server.
+# defaults to fts3.
 #
 # @param fts_db_password
-# (required) the password of the fts database user
+# (optional) the password of the fts database user. 
+# defaults to ftstestpassword. Please change this parameter to a secure password.
 #
 # @param admin_list
-# (required) the list of the admin users for the fts database
+# (required) the list of the admin users for the fts database. In order for the fts server to work,
+# at least one admin user must be configured. The admin user must be in the form of a DN.
+# Admins will be created if they do not exist only if the FTS database has been populated with tables
+# through the build_fts_tables parameter.
 #
 # @param configure_firewall
-# (optional) whether to configure the firewall or not
+# (optional) whether to configure the firewall or not. 
+# defaults to true. The firewall will be configured to allow access only to the mysql server.
 #
 # @param configure_selinux
-# (optional) whether to configure selinux or not
+# (optional) whether to configure selinux or not.
+# defaults to true. Selinux will be configured to permissive mode.
 #
 # @param build_mysql_server
-# (optional) whether to build the mysql server or not. Defaults to true.
+# (optional) whether to build the mysql server or not. 
+# defaults to true. if the mysql server is not built, the script assumes that 
+# a mysql server is already running on the machine and that the root user and password are valid.
 #
 # @param build_fts_tables
-#   (optional) Whether to build the FTS tables or not. Defaults to true.
-#   In order to build the tables, the MySQL database, and user must already exist.
-#
+# (optional) Whether to build the FTS tables or not. d
+# defaults to true. The script in either case will create and/or check the presente of the 
+# fts database and the user. If the parameter is set to true, the fts database will be populated
+# with the tables needed for the fts server to work. If the parameter is set to false, the script will
+# only check the presence of the fts database and the user.
+#  
 # @param grant_privileges
-#   (optional) Whether to grant privileges to the FTS and Root user or not on all databases. Defaults to true.
-#   In order to grant privileges, the MySQL database, the FTS Tables, and user must already exist and the MySQL root 
-#   password must be provided. 
+# (optional) Whether to grant privileges to the FTS and root user on the database. 
+# defaults to true. In order to grant privileges, the MySQL database, the FTS Tables, 
+# and user must already exist and the MySQL root user and password must be provided. 
+# Correct privileges to the fts database for, at least, the fts user are neeed for the fts server 
+# to work. So, if the parameter is set to false, make sure to grant privilegs manually. 
 #
 # @param configure_admins
-#   (optional) Whether to configure the FTS admins or not. Defaults to true.
-#   In order to configure the admins, the MySQL database, the FTS Tables, and user must already exist.
+# (optional) Whether to configure the FTS admins or not. 
+# defaults to true. In order to configure the admins, the MySQL database, 
+# the FTS Tables, and user must already exist.
 #
 class fts::database (
   String  $db_root_user       = 'root',

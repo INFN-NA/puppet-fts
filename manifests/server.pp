@@ -1,6 +1,7 @@
 # @summary
 #   This class defines the configuration for the FTS server.
-#   It takes in parameters for configuring the server and sets up the necessary resources.
+#   It takes in parameters for configuring the server and sets up the
+#   necessary resources.
 #
 # @example
 #   class { 'fts::server':
@@ -15,35 +16,50 @@
 #  }
 #
 # @param fts_user
-#   (required) The user that will run the FTS server
+# (required) The user that will run the FTS server.
+# defaults to fts3.
 # 
 # @param fts_db_type
-#   (optional) The type of database backend to use
+# (optional) The type of database backend to use.
+# defaults to mysql which is the only supported backend.
 #
 # @param db_host
-#   (required) The hostname or IPV4 of the database server
+# (required) The hostname or IP of the machine hosting the mysql database..
+# defaults to fts-db.infn.it. This host must be accessible from the FTS server.
 #
 # @param fts_db_name
-#   (optional) The name of the database to use
+# (optional) The name of the mysql database hosted on the database server.
+# defaults to fts.
 #
 # @param fts_db_password
-#   (optional) The password to use to connect to the database
+# (optional) The password for the fts user to connect to the database.
+# defaults to ftstestpassword.
 #
 # @param fts_db_threads_num
-#   (optional) The number of threads to use for the database backend
+# (optional) The number of threads to use for the database backend.
+# defaults to 24.
 #
 # @param fts_server_alias
-#   (optional) The alias to use for the FTS server
+# (optional) The alias to use for the FTS server
+# defaults to fts3-server.
 #
 # @param configure_firewall
-#   (optional) Whether to configure the firewall or not
+# (optional) Whether to configure the firewall or not. 
+# defaults to true. If set to false, the firewall must be configured manually.
+# If set to true, the firewall module opens the following ports:
+# 8446 for the REST API, 8449 for the web monitoring.
 #
 # @param configure_selinux
-#   (optional) Whether to configure SELinux or not
+# (optional) Whether to configure SELinux or not. 
+# defaults to true. If set to true, it sets SELinux to enforcing mode.
 #
 # @param build_fts_tables
-#   (optional) Whether to build the FTS tables or not. Defaults to true.
-#   In order to build the tables, the MySQL database, and user must already exist.
+# (optional) Whether to build the FTS tables or not. 
+# defaults to true.
+# In order to build the tables, the MySQL fts database, 
+# and user must already exist. It can only be done if the mysql server is hosted
+# on a CentOS machine, otherwise building the tables must be done manually or by running
+# the module on the database machine.
 # 
 class fts::server (
   String  $fts_user                 = 'fts3',
