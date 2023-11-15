@@ -10,15 +10,17 @@
 It can also install the MySQL server and create the FTS3 database.
 The class can be used to configure only the FTS3 server, only the MySQL server, or both.
 * [`fts::client`](#fts--client): This class isntall the FTS client
-* [`fts::database`](#fts--database): @summary: this class configures the fts database. Depending on the parameter choices it can build an fts server, create the   database and th
+* [`fts::database`](#fts--database): @summary: this class can create and configures the mysql fts database. Depending on the parameter choices,   it can create an mysql server, c
 * [`fts::server`](#fts--server): This class defines the configuration for the FTS server.
-It takes in parameters for configuring the server and sets up the necessary resources.
+It takes in parameters for configuring the server and sets up the
+necessary resources.
 
 ## Classes
 
 ### <a name="fts"></a>`fts`
 
-(optional) whether to build the mysql server or not. Defaults to true.
+(optional) The number of threads to use for the FTS3 database.
+defaults to 24.
 
 #### Examples
 
@@ -28,6 +30,8 @@ It takes in parameters for configuring the server and sets up the necessary reso
 class { 'fts':
   fts_host           => 'fts3-server.example.org',
   db_host            => 'fts3-db.example.org',
+  db_name            => 'fts',
+  db_root_user       => 'root',
   db_root_password   => 'roottestpassword',
   fts_db_password    => 'ftstestpassword',
   fts_db_user        => 'fts3',
@@ -42,6 +46,7 @@ class { 'fts':
   build_mysql_server => true,
   build_fts_tables   => true,
   grant_privileges   => true,
+  configure_admins   => true,
   configure_lsc      => true,
   vo_list            => ['alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam', 'escape', 'lhcb', 'ops', 'wlcg'],
 }
@@ -54,8 +59,8 @@ The following parameters are available in the `fts` class:
 * [`fts_host`](#-fts--fts_host)
 * [`db_host`](#-fts--db_host)
 * [`db_name`](#-fts--db_name)
+* [`db_root_user`](#-fts--db_root_user)
 * [`db_root_password`](#-fts--db_root_password)
-* [`fts_db_user`](#-fts--fts_db_user)
 * [`fts_db_password`](#-fts--fts_db_password)
 * [`fts_db_type`](#-fts--fts_db_type)
 * [`fts_server_alias`](#-fts--fts_server_alias)
@@ -64,21 +69,23 @@ The following parameters are available in the `fts` class:
 * [`configure_fts`](#-fts--configure_fts)
 * [`configure_db`](#-fts--configure_db)
 * [`configure_firewall`](#-fts--configure_firewall)
+* [`configure_admins`](#-fts--configure_admins)
 * [`configure_lsc`](#-fts--configure_lsc)
 * [`configure_selinux`](#-fts--configure_selinux)
 * [`build_mysql_server`](#-fts--build_mysql_server)
 * [`vo_list`](#-fts--vo_list)
 * [`build_fts_tables`](#-fts--build_fts_tables)
 * [`grant_privileges`](#-fts--grant_privileges)
+* [`fts_db_user`](#-fts--fts_db_user)
 
 ##### <a name="-fts--fts_host"></a>`fts_host`
 
 Data type: `String`
 
 (required) The hostname of the FTS3 server.
-Defaults to the value of $::fqdn.
-The value of this parameter is used to set the FTS3 server hostname in the
-MySQL database.
+defaults to fts-server.infn.it
+The value of this parameter is used to set the FTS3
+server hostname in the MySQL database.
 
 Default value: `'fts3-server.infn.it'`
 
@@ -87,9 +94,9 @@ Default value: `'fts3-server.infn.it'`
 Data type: `String`
 
 (required) The hostname of the FTS3 database.
-Defaults to the value of $::fqdn.
-The value of this parameter is used to set the FTS3 database hostname in the FTS3
-configuration file.
+Defaults to fts-db.infn.it
+The value of this parameter is used to set the
+FTS database hostname in the FTS configuration file.
 
 Default value: `'fts3-db.infn.it'`
 
@@ -97,34 +104,39 @@ Default value: `'fts3-db.infn.it'`
 
 Data type: `String`
 
-(required) The name of the FTS3 database.
-Defaults to 'fts'.
+(optional) the name of the fts database user.
+defaults to fts3. The user will be created if it does not exist.
 
 Default value: `'fts'`
+
+##### <a name="-fts--db_root_user"></a>`db_root_user`
+
+Data type: `String`
+
+(optional) The username of the MySQL root user.
+defaults to 'root'. If the mysql server is not built,
+or grants to the root and fts users must not be given
+becouse the database alredy exists, this parameter is ignored.
+
+Default value: `'root'`
 
 ##### <a name="-fts--db_root_password"></a>`db_root_password`
 
 Data type: `String`
 
-(required) The password of the MySQL root user.
+(optional) the root password for the mysql server.
+Defaults to roottestpassword. If the mysql server is not built,
+or grants to the root and fts users must not be given
+becouse the database alredy exists, this parameter is ignored.
 
 Default value: `'dbrootpassword'`
-
-##### <a name="-fts--fts_db_user"></a>`fts_db_user`
-
-Data type: `String`
-
-(optional) The username of the FTS3 database.
-Defaults to 'fts3'.
-
-Default value: `'fts3'`
 
 ##### <a name="-fts--fts_db_password"></a>`fts_db_password`
 
 Data type: `String`
 
-(optional) The password of the FTS3 database.
-Defaults to 'ftstestpassword'.
+(optional) the password of the fts database user.
+defaults to ftstestpassword. Please change this parameter to a secure password.
 
 Default value: `'ftstestpassword'`
 
@@ -132,8 +144,8 @@ Default value: `'ftstestpassword'`
 
 Data type: `String`
 
-(optional) The type of the FTS3 database.
-Defaults to 'mysql'.
+(optional) The type of database backend to use.
+defaults to mysql which is the only supported backend.
 
 Default value: `'mysql'`
 
@@ -141,8 +153,8 @@ Default value: `'mysql'`
 
 Data type: `String`
 
-(optional) The alias of the FTS3 server.
-Defaults to 'fts3-server'.
+(optional) The alias to use for the FTS server
+defaults to fts3-server.
 
 Default value: `'fts3-server'`
 
@@ -150,8 +162,12 @@ Default value: `'fts3-server'`
 
 Data type: `Array`
 
-(optional) List of DNs of the FTS3 administrators.
-Defaults to ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri]
+(required) the list of the admin users for the fts database.
+defaults to ['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri]
+In order for the fts server to work, at least one admin user must be configured.
+The admin user must be in the form of a DN.
+Admins will be created if they do not exist only if the FTS database has been populated with tables
+through the build_fts_tables parameter.
 
 Default value: `['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it']`
 
@@ -159,8 +175,7 @@ Default value: `['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica N
 
 Data type: `Integer`
 
-(optional) The number of threads to use for the FTS3 database.
-Defaults to 24.
+
 
 Default value: `24`
 
@@ -169,6 +184,9 @@ Default value: `24`
 Data type: `Boolean`
 
 (optional) Whether to configure the FTS3 server.
+defaults to true. If this parameter is set to True, the FTS3 server will be configured, i.e. the
+class fts::server will be included and used to install needed dependencies and configure the FTS3 service.
+For further information about the parameters of the fts::server class, please refer to the documentation of the class.
 
 Default value: `true`
 
@@ -176,8 +194,10 @@ Default value: `true`
 
 Data type: `Boolean`
 
-(optional) Whether to configure the FTS3 database.
-Defaults to true.
+(optional) Whether to configure the FTS3 MySQL database.
+defaults to true. If this parameter is set to True, the FTS3 database will be configured, i.e. the
+class fts::database will be included and used to install needed dependencies and configure the MySQL FTS3 database.
+For further information about the parameters of the fts::database class, please refer to the documentation of the class.
 
 Default value: `true`
 
@@ -186,7 +206,21 @@ Default value: `true`
 Data type: `Boolean`
 
 (optional) Whether to configure the firewall.
-Defaults to true.
+defaults to true. If configure_fts is set to true,
+the firewallthe firewall module opens the following ports:
+8446 for the REST API, 8449 for the web monitoring.
+If configure_db is set to true, the firewall module opens the following ports:
+3306 for the MySQL server. All remaining ports are closed.
+
+Default value: `true`
+
+##### <a name="-fts--configure_admins"></a>`configure_admins`
+
+Data type: `Boolean`
+
+(required) Whether to configure the FTS3 administrators.
+defaults to true. If set to true, the list of admins is taken from the admin_list parameter,
+and the admins are created if they do not exist.
 
 Default value: `true`
 
@@ -195,7 +229,8 @@ Default value: `true`
 Data type: `Boolean`
 
 (optional) Whether to install and configure the servers as VOMS clients.
-Defaults to true.
+defaults to true. If set to false, VOMS must be already configured on the server. LSC setup for at least
+one VO (and one admin for that VO) is required for the FTS3 server to work.
 
 Default value: `true`
 
@@ -204,7 +239,7 @@ Default value: `true`
 Data type: `Boolean`
 
 (optional) Whether to configure SELinux.
-Defaults to true.
+defaults to true. Selinux is set to enforcing on the FTS server, and to permissive on the MySQL server.
 
 Default value: `true`
 
@@ -212,7 +247,9 @@ Default value: `true`
 
 Data type: `Boolean`
 
-
+(optional) whether to build the mysql server or not.
+defaults to true. if the mysql server is not built, the script assumes that
+a mysql server is already running on the machine and that the root user and password are valid.
 
 Default value: `true`
 
@@ -222,8 +259,8 @@ Data type: `Array`
 
 (optional) List of VOs to configure. Add the VOs to the list.
 Possible values are 'alice', 'atlas', 'cms', 'cygno', 'datacloud', 'dteam',
-  'escape', 'lhcb', 'ops', 'wlcg'
-Defaults to [None].
+'escape', 'lhcb', 'ops', 'wlcg'
+defaults to [None].
 
 Default value: `['cycgno', 'datacloud']`
 
@@ -231,8 +268,13 @@ Default value: `['cycgno', 'datacloud']`
 
 Data type: `Boolean`
 
-(optional) Whether to build the FTS3 tables.
-Defaults to true.
+(optional) Whether to build the FTS tables or not.
+defaults to true. The script in either case will create and/or check the presente of the
+fts database and the user. If the parameter is set to true, the fts database will be populated
+with the tables needed for the fts server to work. If the parameter is set to false, the script will
+only check the presence of the fts database and the user. The tables can be build both from the fts server through an
+automatic SQL query on the MySQL database (in case the MySQL is CentOS 7),
+or directly on the mySQL server by combining this flag with configure_db = true.
 
 Default value: `true`
 
@@ -240,11 +282,21 @@ Default value: `true`
 
 Data type: `Boolean`
 
-(optional) Whether to grant privileges to the FTS and Root user or not on all databases. Defaults to true.
-In order to grant privileges, the MySQL database, the FTS Tables, and user must already exist and the MySQL root
-password must be provided.
+(optional) Whether to grant privileges to the FTS and root user on the database.
+defaults to true. In order to grant privileges, the MySQL database, the FTS Tables,
+and user must already exist and the MySQL root user and password must be provided.
+Correct privileges to the fts database for, at least, the fts user are neeed for the fts server
+to work. So, if the parameter is set to false, make sure to grant privilegs manually.
 
 Default value: `true`
+
+##### <a name="-fts--fts_db_user"></a>`fts_db_user`
+
+Data type: `String`
+
+
+
+Default value: `'fts3'`
 
 ### <a name="fts--client"></a>`fts::client`
 
@@ -260,26 +312,10 @@ include fts::client
 
 ### <a name="fts--database"></a>`fts::database`
 
-@summary: this class configures the fts database. Depending on the parameter choices it can build an fts server, create the
-  database and the user, populate the tables and configure the firewall and selinux.
-
-(required) the root password for the mysql server
-
-(required) the name of the fts database
-
-(required) the hostname of the fts server
-
-(required) the name of the fts database user
-
-(required) the password of the fts database user
-
-(required) the list of the admin users for the fts database
-
-(optional) whether to configure the firewall or not
-
-(optional) whether to configure selinux or not
-
-(optional) whether to build the mysql server or not. Defaults to true.
+@summary: this class can create and configures the mysql fts database. Depending on the parameter choices,
+  it can create an mysql server, create and configure the fts
+  database and the user, populate it with tables, add admins,
+  and configure the firewall and selinux.
 
 #### Examples
 
@@ -287,6 +323,7 @@ include fts::client
 
 ```puppet
 class { 'fts::database':
+  db_root => 'root',
   db_root_password => 'ftstestpassword',
   db_name     => 'fts',
   fts_host    => 'fts-server.infn.it',
@@ -306,6 +343,7 @@ class { 'fts::database':
 
 The following parameters are available in the `fts::database` class:
 
+* [`db_root_user`](#-fts--database--db_root_user)
 * [`db_root_password`](#-fts--database--db_root_password)
 * [`db_name`](#-fts--database--db_name)
 * [`fts_host`](#-fts--database--fts_host)
@@ -317,12 +355,27 @@ The following parameters are available in the `fts::database` class:
 * [`build_mysql_server`](#-fts--database--build_mysql_server)
 * [`build_fts_tables`](#-fts--database--build_fts_tables)
 * [`grant_privileges`](#-fts--database--grant_privileges)
+* [`configure_admins`](#-fts--database--configure_admins)
+
+##### <a name="-fts--database--db_root_user"></a>`db_root_user`
+
+Data type: `String`
+
+(optional) the root user for the mysql server,
+defaults to root. If the mysql server is not built,
+or grants to the root and fts users must not be given
+becouse the database alredy exists, this parameter is ignored.
+
+Default value: `'root'`
 
 ##### <a name="-fts--database--db_root_password"></a>`db_root_password`
 
 Data type: `String`
 
-
+(optional) the root password for the mysql server.
+Defaults to roottestpassword. If the mysql server is not built,
+or grants to the root and fts users must not be given
+becouse the database alredy exists, this parameter is ignored.
 
 Default value: `'roottestpassword'`
 
@@ -330,7 +383,8 @@ Default value: `'roottestpassword'`
 
 Data type: `String`
 
-
+(required) the name of the fts database.
+defaults to fts. The database will be created if it does not exist.
 
 Default value: `'fts'`
 
@@ -338,7 +392,8 @@ Default value: `'fts'`
 
 Data type: `String`
 
-
+(required) the hostname of the fts server. This can be the FQDN or
+the IP address of the machine hosting the mysql db.
 
 Default value: `'fts-server.infn.it'`
 
@@ -346,7 +401,8 @@ Default value: `'fts-server.infn.it'`
 
 Data type: `String`
 
-
+(required) The user that will run the FTS server.
+defaults to fts3.
 
 Default value: `'fts3'`
 
@@ -354,7 +410,8 @@ Default value: `'fts3'`
 
 Data type: `String`
 
-
+(optional) the password of the fts database user.
+defaults to ftstestpassword. Please change this parameter to a secure password.
 
 Default value: `'ftstestpassword'`
 
@@ -362,7 +419,10 @@ Default value: `'ftstestpassword'`
 
 Data type: `Array`
 
-
+(required) the list of the admin users for the fts database. In order for the fts server to work,
+at least one admin user must be configured. The admin user must be in the form of a DN.
+Admins will be created if they do not exist only if the FTS database has been populated with tables
+through the build_fts_tables parameter.
 
 Default value: `['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica Nucleare/CN=Michele Delli Veneri delliven@infn.it']`
 
@@ -370,7 +430,8 @@ Default value: `['/DC=org/DC=terena/DC=tcs/C=IT/O=Istituto Nazionale di Fisica N
 
 Data type: `Boolean`
 
-
+(optional) whether to configure the firewall or not.
+defaults to true. The firewall will be configured to allow access only to the mysql server.
 
 Default value: `true`
 
@@ -378,7 +439,8 @@ Default value: `true`
 
 Data type: `Boolean`
 
-
+(optional) whether to configure selinux or not.
+defaults to true. Selinux will be configured to permissive mode.
 
 Default value: `true`
 
@@ -386,7 +448,9 @@ Default value: `true`
 
 Data type: `Boolean`
 
-
+(optional) whether to build the mysql server or not.
+defaults to true. if the mysql server is not built, the script assumes that
+a mysql server is already running on the machine and that the root user and password are valid.
 
 Default value: `true`
 
@@ -394,8 +458,11 @@ Default value: `true`
 
 Data type: `Boolean`
 
-(optional) Whether to build the FTS tables or not. Defaults to true.
-In order to build the tables, the MySQL database, and user must already exist.
+(optional) Whether to build the FTS tables or not. d
+defaults to true. The script in either case will create and/or check the presente of the
+fts database and the user. If the parameter is set to true, the fts database will be populated
+with the tables needed for the fts server to work. If the parameter is set to false, the script will
+only check the presence of the fts database and the user.
 
 Default value: `true`
 
@@ -403,15 +470,30 @@ Default value: `true`
 
 Data type: `Boolean`
 
-(optional) Whether to grant privileges to the FTS and Root user or not on all databases. Defaults to true.
-In order to grant privileges, the MySQL database, the FTS Tables, and user must already exist and the MySQL root
-password must be provided.
+(optional) Whether to grant privileges to the FTS and root user on the database.
+defaults to true. In order to grant privileges, the MySQL database, the FTS Tables,
+and user must already exist and the MySQL root user and password must be provided.
+Correct privileges to the fts database for, at least, the fts user are neeed for the fts server
+to work. So, if the parameter is set to false, make sure to grant privilegs manually.
+
+Default value: `true`
+
+##### <a name="-fts--database--configure_admins"></a>`configure_admins`
+
+Data type: `Boolean`
+
+(optional) Whether to configure the FTS admins or not.
+defaults to true. In order to configure the admins, the MySQL database,
+the FTS Tables, and user must already exist.
 
 Default value: `true`
 
 ### <a name="fts--server"></a>`fts::server`
 
 }
+
+o n a CentOS machine, otherwise building the tables must be done manually or by running
+t he module on the database machine.
 
 #### Examples
 
@@ -421,7 +503,7 @@ Default value: `true`
 class { 'fts::server':
   fts_user => 'fts3',
   fts_db_type => 'mysql',
-  fts_db_username => 'root',
+  db_host => 'fts-db.infn.it',
   fts_db_name => 'fts',
   fts_db_password => 'ftstestpassword',
   fts_db_threads_num => 24,
@@ -436,7 +518,6 @@ The following parameters are available in the `fts::server` class:
 * [`fts_user`](#-fts--server--fts_user)
 * [`fts_db_type`](#-fts--server--fts_db_type)
 * [`db_host`](#-fts--server--db_host)
-* [`fts_db_username`](#-fts--server--fts_db_username)
 * [`fts_db_name`](#-fts--server--fts_db_name)
 * [`fts_db_password`](#-fts--server--fts_db_password)
 * [`fts_db_threads_num`](#-fts--server--fts_db_threads_num)
@@ -449,7 +530,8 @@ The following parameters are available in the `fts::server` class:
 
 Data type: `String`
 
-(required) The user that will run the FTS server
+(required) The user that will run the FTS server.
+defaults to fts3.
 
 Default value: `'fts3'`
 
@@ -457,7 +539,8 @@ Default value: `'fts3'`
 
 Data type: `String`
 
-(optional) The type of database backend to use
+(optional) The type of database backend to use.
+defaults to mysql which is the only supported backend.
 
 Default value: `'mysql'`
 
@@ -465,23 +548,17 @@ Default value: `'mysql'`
 
 Data type: `String`
 
-(required) The hostname or IPV4 of the database server
+(required) The hostname or IP of the machine hosting the mysql database..
+defaults to fts-db.infn.it. This host must be accessible from the FTS server.
 
 Default value: `'fts-db.infn.it'`
-
-##### <a name="-fts--server--fts_db_username"></a>`fts_db_username`
-
-Data type: `String`
-
-(optional) The username to use to connect to the database
-
-Default value: `'root'`
 
 ##### <a name="-fts--server--fts_db_name"></a>`fts_db_name`
 
 Data type: `String`
 
-(optional) The name of the database to use
+(optional) The name of the mysql database hosted on the database server.
+defaults to fts.
 
 Default value: `'fts'`
 
@@ -489,7 +566,8 @@ Default value: `'fts'`
 
 Data type: `String`
 
-(optional) The password to use to connect to the database
+(optional) The password for the fts user to connect to the database.
+defaults to ftstestpassword.
 
 Default value: `'ftstestpassword'`
 
@@ -497,7 +575,8 @@ Default value: `'ftstestpassword'`
 
 Data type: `Integer`
 
-(optional) The number of threads to use for the database backend
+(optional) The number of threads to use for the database backend.
+defaults to 24.
 
 Default value: `24`
 
@@ -506,6 +585,7 @@ Default value: `24`
 Data type: `String`
 
 (optional) The alias to use for the FTS server
+defaults to fts3-server.
 
 Default value: `'fts3-server'`
 
@@ -513,7 +593,10 @@ Default value: `'fts3-server'`
 
 Data type: `Boolean`
 
-(optional) Whether to configure the firewall or not
+(optional) Whether to configure the firewall or not.
+defaults to true. If set to false, the firewall must be configured manually.
+If set to true, the firewall module opens the following ports:
+8446 for the REST API, 8449 for the web monitoring.
 
 Default value: `true`
 
@@ -521,7 +604,8 @@ Default value: `true`
 
 Data type: `Boolean`
 
-(optional) Whether to configure SELinux or not
+(optional) Whether to configure SELinux or not.
+defaults to true. If set to true, it sets SELinux to enforcing mode.
 
 Default value: `true`
 
@@ -529,8 +613,10 @@ Default value: `true`
 
 Data type: `Boolean`
 
-(optional) Whether to build the FTS tables or not. Defaults to true.
-In order to build the tables, the MySQL database, and user must already exist.
+(optional) Whether to build the FTS tables or not.
+defaults to true.
+In order to build the tables, the MySQL fts database,
+and user must already exist. It can only be done if the mysql server is hosted
 
 Default value: `true`
 
