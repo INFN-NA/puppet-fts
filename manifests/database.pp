@@ -156,7 +156,7 @@ class fts::database (
               default:
                 ensure => directory,
                 ;
-              '/usr/share/':
+              '/usr/share':
                 ;
               '/usr/share/fts-mysql':
                 ;
@@ -179,12 +179,12 @@ class fts::database (
         }
       }
       default: {
-        notify { "Unsupported OS: ${facts['os']['name']}, database created but skipping FTS Tables Creation": }
+        notify { "Unsupported OS: ${facts['os']['name']}, database created AND using sql schema 8.0.1 from puppet": }
         file {
           default:
             ensure => directory,
             ;
-          '/etc/share':
+          '/usr/share':
             ;
           '/usr/share/fts-mysql':
             ;
