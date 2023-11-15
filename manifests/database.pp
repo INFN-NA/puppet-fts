@@ -173,7 +173,7 @@ class fts::database (
               password => $fts_db_password,
               name     => $db_name,
               host     => $::ipaddress,
-              sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql']
+              sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
             }
           }
         }
