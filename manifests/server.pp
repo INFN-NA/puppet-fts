@@ -174,11 +174,11 @@ class fts::server (
         proto => 'tcp',
         jump  => 'accept',
     }
-    firewall { '99999 drop all':
-      proto  => 'all',
-      jump   => 'drop',
-      before => undef,
-    }
+    #firewall { '99999 drop all':
+    #  proto  => 'all',
+    #  jump   => 'drop',
+    #  before => undef,
+    #}
   }
   cron::hourly { 'fts-info-publisher':
     ensure  => 'present',

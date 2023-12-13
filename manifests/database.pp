@@ -286,11 +286,11 @@ class fts::database (
         proto => 'tcp',
         jump  => 'accept',
     }
-    firewall { '99999 drop all':
-      proto  => 'all',
-      jump   => 'drop',
-      before => undef,
-    }
+    #firewall { '99999 drop all':
+    #  proto  => 'all',
+    #  jump   => 'drop',
+    #  before => undef,
+    #}
   }
   notify { 'FTS Database Configuration Complete': }
 }
