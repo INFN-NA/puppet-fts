@@ -147,7 +147,7 @@ class fts::database (
               password => $fts_db_password,
               name     => $db_name,
               host     => $::ipaddress,
-              sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
+              sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
             }
           }
           default: {
@@ -161,9 +161,9 @@ class fts::database (
               '/usr/share/fts-mysql':
                 ;
             }
-            file { '/usr/share/fts-mysql/fts-schema-8.0.1.sql':
+            file { '/usr/share/fts-mysql/fts-schema-8.2.0.sql':
               ensure  => file,
-              source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
+              source  => 'puppet:///modules/fts/fts-schema-8.2.0.sql',
               require => File['/usr/share/fts-mysql'],
             }
             mysql::db { $db_name:
@@ -173,7 +173,7 @@ class fts::database (
               password => $fts_db_password,
               name     => $db_name,
               host     => $::ipaddress,
-              sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
+              sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
             }
           }
         }
@@ -189,9 +189,9 @@ class fts::database (
           '/usr/share/fts-mysql':
             ;
         }
-        file { '/usr/share/fts-mysql/fts-schema-8.0.1.sql':
+        file { '/usr/share/fts-mysql/fts-schema-8.2.0.sql':
           ensure  => file,
-          source  => 'puppet:///modules/fts/fts-schema-8.0.1.sql',
+          source  => 'puppet:///modules/fts/fts-schema-8.2.0.sql',
           require => File['/usr/share/fts-mysql'],
         }
         mysql::db { $db_name:
@@ -201,7 +201,7 @@ class fts::database (
           password => $fts_db_password,
           name     => $db_name,
           host     => $::ipaddress,
-          sql      => ['/usr/share/fts-mysql/fts-schema-8.0.1.sql'],
+          sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
         }
       }
     }
