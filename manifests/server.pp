@@ -89,8 +89,9 @@ class fts::server (
   }
   package {
     default:
-      ensure   => present,
-      provider => yum,
+      ensure          => present,
+      provider        => yum,
+      install_options => ['--enablerepo=dmc-el7']
       ;
 
     # Base packages
