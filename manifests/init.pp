@@ -210,6 +210,18 @@ class fts (
           include yum
           package {
             default:
+              ensure          => present,
+              provider        => yum,
+              require         => [File['/etc/yum.repos.d/fts3-el7.repo'], File['/etc/yum.repos.d/dmc-el7.repo']],
+              install_options => ['--enablerepo=dmc-el7']
+              ;
+            # Gfal2 and dependencies
+            ['CGSI-gSOAP', 'davix', 'gfal2-all', 'srm-ifce']:
+              ;
+          }
+
+          package {
+            default:
               ensure   => present,
               provider => yum,
               require  => [File['/etc/yum.repos.d/fts3-depend-el7.repo'], File['/etc/yum.repos.d/EGI-trustanchors.repo']],
@@ -219,11 +231,6 @@ class fts (
             # fts-rest-server requires rh-python36-mod_wsgi
             ['centos-release-scl','centos-release-scl-rh']:
               ;
-
-            # Gfal2 and dependencies
-            ['CGSI-gSOAP', 'davix', 'gfal2-all', 'srm-ifce']:
-              ;
-
             # Certificate management
             ['fetch-crl', 'ca-policy-egi-core', 'voms-clients-java']:
               ;
