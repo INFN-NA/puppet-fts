@@ -185,9 +185,9 @@ class fts (
               ;
 
             # DMC EL7
-            #'/etc/yum.repos.d/dmc-el7.repo':
-            #  source => 'https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo',
-            #  ;
+            '/etc/yum.repos.d/dmc-el7.repo':
+              source => 'https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo',
+              ;
 
             # FTS Production EL7
             '/etc/yum.repos.d/fts3-el7.repo':
