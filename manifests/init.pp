@@ -169,14 +169,14 @@ class fts (
         '7': {
           notify { 'Configuring Repositories and Dependencies': }
           # Install the EPEL repository
-          package {
-            default:
-              ensure   => present,
-              provider => yum,
-              ;
-            'epel-release':
-              ;
-          }
+          #package {
+            #default:
+            #  ensure   => present,
+            #  provider => yum,
+            #  ;
+            #'epel-release':
+            #  ;
+          #}
           # Install the FTS3 repository and dependencies plus some usefull packages
           file {
             default:
