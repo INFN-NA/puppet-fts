@@ -117,7 +117,7 @@ class fts::server (
     group   => 'root',
     mode    => '0644',
     source  => 'puppet:///modules/fts/fts3rest.conf',
-    require => [Package['fts-rest-server'], Package['httpd']],
+    #require => [Package['fts-rest-server'], Package['httpd']],
   }
 
   file { '/etc/httpd/conf.d/ftsmon.conf':
@@ -126,7 +126,7 @@ class fts::server (
     group   => 'root',
     mode    => '0644',
     source  => 'puppet:///modules/fts/ftsmon.conf',
-    require => [Package['fts-monitoring'], Package['httpd']],
+    #require => [Package['fts-monitoring'], Package['httpd']],
   }
 
 # Build the FTS tables remotely
@@ -136,7 +136,7 @@ class fts::server (
     exec { 'fts-mysql-schema':
       command => "/usr/bin/mysql --user='${fts_user}' --password='${fts_db_password}' --host='${db_host}' --database='${fts_db_name}' < '/usr/share/fts-mysql/fts-schema-8.2.0.sql'",
       path    => ['/usr/bin', '/usr/sbin'],
-      require => Package['fts-mysql'],
+      #require => Package['fts-mysql'],
     }
   }
   if $configure_firewall {
@@ -215,7 +215,7 @@ class fts::server (
     file_line { $iterate_array[1]:
       ensure  => 'present',
       path    => '/etc/fts3/fts3config',
-      require => Package['fts-server'],
+      #require => Package['fts-server'],
       match   => $iterate_array[0],
       line    => $iterate_array[1],
     }
@@ -233,7 +233,7 @@ class fts::server (
     file_line { "'${iterate_array[1]}'_rest":
       ensure  => 'present',
       path    => '/etc/fts3/fts3restconfig',
-      require => Package['fts-rest-server'],
+      #require => Package['fts-rest-server'],
       match   => $iterate_array[0],
       line    => $iterate_array[1],
     }
