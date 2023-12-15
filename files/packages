@@ -1,0 +1,20 @@
+epel-release
+httpd 
+mod_wsgi
+centos-release-scl
+rh-python36 python36-devel httpd-devel rh-python36-mod_wsgi
+CGSI-gSOAP-1.3.11-1.el7
+davix-0.8.4-1.el7.cern
+srm-ifce-1.24.6-1.el7.cern
+gfal2-all
+fts-server-3.12.10-1.el7.cern
+fts-rest-client-3.12.3-1.el7.cern
+fts-rest-server-3.12.3-1.el7.cern
+fts-monitoring-3.12.1-1.el7.cern
+fts-mysql-3.12.10-1.el7.cern
+fts-server-selinux-3.12.10-1.el7.cern
+fts-rest-server-selinux-3.12.3-1.el7.cern
+fts-monitoring-selinux-3.12.1-1.el7.cern
+fts-msg-3.12.10-1.el7.cern
+fts-infosys-3.12.10-1.el7.cern
+ca-policy-egi-core fetch-crl voms-clients-java net-tools yum-cron

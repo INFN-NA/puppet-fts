@@ -87,29 +87,29 @@ class fts::server (
   class { 'apache::mod::ssl':
     ssl_cipher => "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384",
   }
-  package {
-    default:
-      ensure          => present,
-      provider        => yum,
-      install_options => ['--enablerepo=dmc-el7']
-      ;
-
-    # Base packages
-    ['zeromq', 'zeromq-devel', 'fts-server', 'fts-rest-server', 'fts-monitoring']:
-      ;
-
-    # Database backend
-    'fts-mysql':
-      ;
-
-    # SELinux rules
-    ['fts-server-selinux', 'fts-rest-server-selinux', 'fts-monitoring-selinux']:
-      ;
-
-    # Extras
-    ['fts-msg', 'fts-infosys']:
-      ;
-  }
+#  package {
+#    default:
+#      ensure          => present,
+#      provider        => yum,
+#      install_options => ['--enablerepo=dmc-el7']
+#      ;
+#
+#    # Base packages
+#    ['zeromq', 'zeromq-devel', 'fts-server', 'fts-rest-server', 'fts-monitoring']:
+#      ;
+#
+#    # Database backend
+#    'fts-mysql':
+#      ;
+#
+#    # SELinux rules
+#    ['fts-server-selinux', 'fts-rest-server-selinux', 'fts-monitoring-selinux']:
+#      ;
+#
+#    # Extras
+#    ['fts-msg', 'fts-infosys']:
+#      ;
+#  }
   include fts::client
   file { '/etc/httpd/conf.d/fts3rest.conf':
     ensure  => file,
