@@ -163,91 +163,90 @@ class fts (
   Boolean $configure_admins   = true,
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
-#  case $facts['os']['name'] {
-#    'CentOS': {
-#      case $facts['os']['release']['major'] {
-#        '7': {
-#          notify { 'Configuring Repositories and Dependencies': }
-#          # Install the EPEL repository
-#          package {
-#            default:
-#              ensure   => present,
-#              provider => yum,
-#              ;
-#            'epel-release':
-#              ;
-#          }
-#          # Install the FTS3 repository and dependencies plus some usefull packages
-#          file {
-#            default:
-#              owner => 'root',
-#              group => 'root',
-#              ;
-#
-#            # DMC EL7
-#            '/etc/yum.repos.d/dmc-el7.repo':
-#              source => 'https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo',
-#              ;
-#
-#            # FTS Production EL7
-#            '/etc/yum.repos.d/fts3-el7.repo':
-#              source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-el7.repo',
-#              ;
-#
-#            # FTS Depend EL7
-#            '/etc/yum.repos.d/fts3-depend-el7.repo':
-#              source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo',
-#              ;
-#          }
-#          # EGI Trust Anchor repository
-#          file { '/etc/yum.repos.d/EGI-trustanchors.repo':
-#            ensure => file,
-#            owner  => 'root',
-#            group  => 'root',
-#            mode   => '0644',
-#            source => 'puppet:///modules/fts/EGI-trustanchors.repo',
-#          }
-#          include yum
-#          package {
-#            default:
-#              ensure          => present,
-#              provider        => yum,
-#              require         => [File['/etc/yum.repos.d/fts3-el7.repo'], File['/etc/yum.repos.d/dmc-el7.repo']],
-#              install_options => ['--enablerepo=dmc-el7']
-#              ;
-#            # Gfal2 and dependencies
-#            ['CGSI-gSOAP', 'davix', 'gfal2-all', 'srm-ifce']:
-#              ;
-#          }
+  case $facts['os']['name'] {
+    'CentOS': {
+      case $facts['os']['release']['major'] {
+        '7': {
+          notify { 'Configuring Repositories and Dependencies': }
+          # Install the EPEL repository
+          package {
+            default:
+              ensure   => present,
+              provider => yum,
+              ;
+            'epel-release':
+              ;
+          }
+          # Install the FTS3 repository and dependencies plus some usefull packages
+          file {
+            default:
+              group => 'root',
+              ;
 
-#          package {
-#            default:
-#              ensure   => present,
-#              provider => yum,
-#              require  => [File['/etc/yum.repos.d/fts3-depend-el7.repo'], File['/etc/yum.repos.d/EGI-trustanchors.repo']],
-#              ;
-#
-#            # CentOS SCLo SIG software
-#            # fts-rest-server requires rh-python36-mod_wsgi
-#            ['centos-release-scl','centos-release-scl-rh']:
-#              ;
-#            # Certificate management
-#            ['fetch-crl', 'ca-policy-egi-core', 'voms-clients-java']:
-#              ;
-#            # utilities
-#            ['vim', 'net-tools',  'yum-cron']:
-#              ;
-#          }
-#        }
-#        default: {
-#          notify { "Unsupported Release: ${facts['os']['release']['major']}, skipping FTS Repositories and Dependencies": }
-#        }
-#      }
-#    }
-#    default: {
-#      notify { "Unsupported OS: ${facts['os']['name']}, skipping FTS Repositories and Dependencies": }
-#    }
-#  }
+            # DMC EL7
+            '/etc/yum.repos.d/dmc-el7.repo':
+              source => 'https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo',
+              ;
+#systemct
+            # FTS Production EL7
+            '/etc/yum.repos.d/fts3-el7.repo':
+              source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-el7.repo',
+              ;
+
+            # FTS Depend EL7
+            '/etc/yum.repos.d/fts3-depend-el7.repo':
+              source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend-el7.repo',
+              ;
+          }
+          # EGI Trust Anchor repository
+          file { '/etc/yum.repos.d/EGI-trustanchors.repo':
+            ensure => file,
+            owner  => 'root',
+            group  => 'root',
+            mode   => '0644',
+            source => 'puppet:///modules/fts/EGI-trustanchors.repo',
+          }
+          include yum
+          package {
+            default:
+              ensure          => present,
+              provider        => yum,
+              require         => [File['/etc/yum.repos.d/fts3-el7.repo'], File['/etc/yum.repos.d/dmc-el7.repo']],
+              install_options => ['--enablerepo=dmc-el7']
+              ;
+            # Gfal2 and dependencies
+            ['CGSI-gSOAP', 'davix', 'gfal2-all', 'srm-ifce']:
+              ;
+          }
+
+          package {
+            default:
+              ensure   => present,
+              provider => yum,
+              require  => [File['/etc/yum.repos.d/fts3-depend-el7.repo'], File['/etc/yum.repos.d/EGI-trustanchors.repo']],
+              ;
+
+            # CentOS SCLo SIG software
+            # fts-rest-server requires rh-python36-mod_wsgi
+            ['centos-release-scl','centos-release-scl-rh']:
+              ;
+            # Certificate management
+            ['fetch-crl', 'ca-policy-egi-core', 'voms-clients-java']:
+              ;
+            # utilities
+            ['vim', 'net-tools',  'yum-cron']:
+              ;
+          }
+        }
+        default: {
+          notify { "Unsupported Release: ${facts['os']['release']['major']}, skipping FTS Repositories and Dependencies": }
+        }
+      }
+    }
+    default: {
+      notify { "Unsupported OS: ${facts['os']['name']}, skipping FTS Repositories and Dependencies": }
+    }
+  }
   # Configure the VOMS VOs
   if $configure_lsc {
     notify { "Configuring VOMS VOs: ${vo_list}": }
