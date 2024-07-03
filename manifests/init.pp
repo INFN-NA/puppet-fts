@@ -164,6 +164,53 @@ class fts (
   Array   $vo_list            = ['cycgno', 'datacloud'],
 ) {
   case $facts['os']['name'] {
+    'AlmaLinux': {
+      case $facts['os']['release']['major'] {
+        '9': {
+          # Ensure DNF config-manager is installed
+          package { 'dnf-plugins-core':
+            ensure   => present,
+            provider => dnf,
+            before   => Package['epel-release'],
+          }
+          # Enable CRB if not already enabled
+          exec { 'enable-crb':
+            command => 'dnf config-manager --set-enabled crb',
+            path    => '/usr/bin',
+            unless  => 'grep crb <(dnf repolist) 2>/dev/null',
+            require => Package['dnf-plugins-core'],
+            before  => Package['epel-release'],
+        }
+        # EPEL
+          package { 'epel-release':
+            ensure => present,
+          }
+          # CERN FTS Repositories
+          file {
+            default:
+              group => 'root',
+              ;
+
+            # DMC EL9
+            '/etc/yum.repos.d/dmc-el9.repo':
+              source => 'https://dmc-repo.web.cern.ch/dmc-repo/dmc-el9.repo',
+              ;
+            # EGI Trust Anchors
+            '/etc/yum.repos.d/egi-trustanchors.repo':
+              source => 'https://repository.egi.eu/sw/production/cas/1/current/repo-files/egi-trustanchors.repo',
+              ;
+            # FTS Production EL9
+            '/etc/yum.repos.d/fts3-el9.repo':
+              source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-el9.repo',
+              ;
+
+            # FTS Depend EL9
+            '/etc/yum.repos.d/fts3-depend.repo':
+              source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend.repo',
+              ;
+          }
+        }
+    }
     'CentOS': {
       case $facts['os']['release']['major'] {
         '7': {
@@ -187,7 +234,7 @@ class fts (
             '/etc/yum.repos.d/dmc-el7.repo':
               source => 'https://dmc-repo.web.cern.ch/dmc-repo/dmc-el7.repo',
               ;
-#systemct
+
             # FTS Production EL7
             '/etc/yum.repos.d/fts3-el7.repo':
               source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-el7.repo',
