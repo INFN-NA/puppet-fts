@@ -180,8 +180,8 @@ class fts (
             unless  => 'grep crb <(dnf repolist) 2>/dev/null',
             require => Package['dnf-plugins-core'],
             before  => Package['epel-release'],
-        }
-        # EPEL
+          }
+          # EPEL
           package { 'epel-release':
             ensure => present,
           }
@@ -210,6 +210,11 @@ class fts (
               ;
           }
         }
+        default: {
+          # Actions to take for any OS release not explicitly mentioned
+          notify { 'This OS release is not specifically handled': } # Example notification
+        }
+      }
     }
     'CentOS': {
       case $facts['os']['release']['major'] {
@@ -397,7 +402,6 @@ class fts (
       }
     }
   }
-
   # Install the MySQL server and configure the FTS3 database
   if $configure_db {
     notify { 'Configuring Database': }

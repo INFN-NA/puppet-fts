@@ -123,7 +123,7 @@ class fts::database (
       root_password    => $db_root_password,
       override_options => {
         'mysqld' => {
-          'bind-address' => $::ipaddress,
+          'bind-address' => $facts['networking']['ip'],
         },
       },
     }
@@ -146,7 +146,7 @@ class fts::database (
               grant    => ['ALL', 'SUPER'],
               password => $fts_db_password,
               name     => $db_name,
-              host     => $::ipaddress,
+              host     => $facts['networking']['ip'],
               sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
             }
           }
@@ -172,7 +172,7 @@ class fts::database (
               grant    => ['ALL', 'SUPER'],
               password => $fts_db_password,
               name     => $db_name,
-              host     => $::ipaddress,
+              host     => $facts['networking']['ip'],
               sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
             }
           }
@@ -200,7 +200,7 @@ class fts::database (
           grant    => ['ALL', 'SUPER'],
           password => $fts_db_password,
           name     => $db_name,
-          host     => $::ipaddress,
+          host     => $facts['networking']['ip'],
           sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
         }
       }
@@ -214,7 +214,7 @@ class fts::database (
       grant    => ['ALL', 'SUPER'],
       password => $fts_db_password,
       name     => $db_name,
-      host     => $::ipaddress,
+      host     => $facts['networking']['ip'],
     }
   }
   # ------------------------------ Admins and Privileges ----------------------------- #
@@ -223,8 +223,8 @@ class fts::database (
     notify { 'Configuring FTS Admins': }
     $admin_list.each |$admin| {
       exec { "fts-admins-'${admin}'":
-        command => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"INSERT INTO t_authz_dn  (dn, operation) VALUES ('${admin}', 'config')\"",
-        unless  => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${::ipaddress}' --execute \"SELECT * FROM t_authz_dn WHERE dn='${admin}' AND operation='config'\" | grep '${admin}'",
+        command => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${facts['networking']['ip']}' --execute \"INSERT INTO t_authz_dn  (dn, operation) VALUES ('${admin}', 'config')\"",
+        unless  => "/usr/bin/mysql --user='${fts_db_user}' --password='${fts_db_password}' --database='${db_name}' --host='${facts['networking']['ip']}' --execute \"SELECT * FROM t_authz_dn WHERE dn='${admin}' AND operation='config'\" | grep '${admin}'",
         require => Mysql::Db['fts'],
       }
     }
