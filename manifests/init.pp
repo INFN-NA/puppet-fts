@@ -209,10 +209,14 @@ class fts (
               source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend.repo',
               ;
           }
-          package { 'ca packages':
-            ensure   => present,
-            provider => dnf,
-            name     => ['ca-policy-lcg','fetch-crl'],
+          package {
+            default:
+              ensure   => present,
+              provider => dnf,
+              require  => [File['/etc/yum.repos.d/fts3-depend-el9.repo'], File['/etc/yum.repos.d/EGI-trustanchors.repo']],
+              ;
+            ['ca-policy-lcg','fetch-crl']:
+              ;
           }
         }
         default: {
