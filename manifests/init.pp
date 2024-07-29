@@ -211,6 +211,17 @@ class fts (
           }
           package {
             default:
+              ensure          => present,
+              provider        => yum,
+              require         => [File['/etc/yum.repos.d/fts3-el9.repo'], File['/etc/yum.repos.d/dmc-el9.repo']],
+              install_options => ['--enablerepo=dmc-el9']
+              ;
+            # Gfal2 and dependencies
+            ['CGSI-gSOAP', 'davix', 'gfal2-all', 'srm-ifce']:
+              ;
+          }
+          package {
+            default:
               ensure   => present,
               provider => dnf,
               require  => File['/etc/yum.repos.d/egi-trustanchors.repo'],
