@@ -90,24 +90,29 @@ class fts::server (
   package {
     default:
       ensure          => present,
-      provider        => yum,
-      install_options => ['--enablerepo=dmc-el7']
+      provider        => dnf,
+      install_options => ['--enablerepo=crb']
       ;
-
-    # Base packages
-    ['zeromq', 'zeromq-devel', 'fts-server', 'fts-rest-server', 'fts-monitoring']:
+    # Core Packages
+    ['fts-server','fts-server-selinux','fts-mysql']:
       ;
-
-    # Database backend
-    'fts-mysql':
+  }
+  package {
+    default:
+      ensure   => present,
+      provider => dnf,
       ;
-
-    # SELinux rules
-    ['fts-server-selinux', 'fts-rest-server-selinux', 'fts-monitoring-selinux']:
-      ;
-
     # Extras
-    ['fts-msg', 'fts-infosys']:
+    ['fts-msg']:
+      ;
+    # SELinux rules
+    ['fts-server-selinux', 'fts-rest-server-selinux',]:
+      ;
+    # FTS Web Monitoring
+    ['fts-monitoring']:
+      ;
+    # FTS Rest Client
+    ['fts-rest-client']:
       ;
   }
   include fts::client
@@ -134,52 +139,28 @@ class fts::server (
     notify { "Building FTS tables on ${db_host}": }
     include mysql::client
     exec { 'fts-mysql-schema':
-      command => "/usr/bin/mysql --user='${fts_user}' --password='${fts_db_password}' --host='${db_host}' --database='${fts_db_name}' < '/usr/share/fts-mysql/fts-schema-8.2.0.sql'",
+      command => "/usr/bin/mysql --user='${fts_user}' --password='${fts_db_password}' --host='${db_host}' --database='${fts_db_name}' < '/usr/share/fts-mysql/fts-schema-9.0.0.sql'",
       path    => ['/usr/bin', '/usr/sbin'],
       #require => Package['fts-mysql'],
     }
   }
   if $configure_firewall {
     notify { 'Configuring firewall': }
-    include firewall
-    firewall {
-      '00000 accept all icmp':
-        proto => 'icmp',
-        jump  => 'accept',
-        ;
-      '00001 accept all to lo interface':
-        proto   => 'all',
-        iniface => 'lo',
-        jump    => 'accept',
-        ;
-      '00002 reject local traffic not on loopback interface':
-        iniface     => '! lo',
-        proto       => 'all',
-        destination => '127.0.0.1/8',
-        jump        => 'reject',
-        ;
-      '00003 accept related established rules':
-        proto => 'all',
-        state => ['RELATED', 'ESTABLISHED'],
-        jump  => 'accept',
-        ;
-    }
-    firewall {
+    include firewalld
+    firewalld_port {
       '08446 REST API':
-        dport => 8446,
-        proto => 'tcp',
-        jump  => 'accept',
+        ensure   => present,
+        zone     => 'public',
+        port     => 8446,
+        protocol => 'tcp',
         ;
       '08449 Web Monitoring':
-        dport => 8449,
-        proto => 'tcp',
-        jump  => 'accept',
+        ensure   => present,
+        zone     => 'public',
+        port     => 8449,
+        protocol => 'tcp',
+        ;
     }
-    #firewall { '99999 drop all':
-    #  proto  => 'all',
-    #  jump   => 'drop',
-    #  before => undef,
-    #}
   }
   cron::hourly { 'fts-info-publisher':
     ensure  => 'present',

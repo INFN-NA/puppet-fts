@@ -110,6 +110,11 @@ class fts::database (
           mode => 'permissive',
         }
       }
+      'AlmaLinux': {
+        class { 'selinux':
+          mode => 'permissive',
+        }
+      }
       default: {
         notify { "Unsupported OS: ${facts['os']['name']}, skipping Selinux Configuration": }
       }
@@ -147,7 +152,7 @@ class fts::database (
               password => $fts_db_password,
               name     => $db_name,
               host     => $facts['networking']['ip'],
-              sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
+              sql      => ['/usr/share/fts-mysql/fts-schema-9.0.0.sql'],
             }
           }
           default: {
@@ -161,9 +166,9 @@ class fts::database (
               '/usr/share/fts-mysql':
                 ;
             }
-            file { '/usr/share/fts-mysql/fts-schema-8.2.0.sql':
+            file { '/usr/share/fts-mysql/fts-schema-9.0.0.sql':
               ensure  => file,
-              source  => 'puppet:///modules/fts/fts-schema-8.2.0.sql',
+              source  => 'puppet:///modules/fts/fts-schema-9.0.0.sql',
               require => File['/usr/share/fts-mysql'],
             }
             mysql::db { $db_name:
@@ -173,7 +178,51 @@ class fts::database (
               password => $fts_db_password,
               name     => $db_name,
               host     => $facts['networking']['ip'],
-              sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
+              sql      => ['/usr/share/fts-mysql/fts-schema-9.0.0.sql'],
+            }
+          }
+        }
+      }
+      'AlmaLinux': {
+        case $facts['os']['release']['major'] {
+          '9': {
+            package { 'fts-mysql':
+              ensure  => present,
+            }
+            mysql::db { $db_name:
+              ensure   => 'present',
+              user     => $fts_db_user,
+              grant    => ['ALL', 'SUPER'],
+              password => $fts_db_password,
+              name     => $db_name,
+              host     => $facts['networking']['ip'],
+              sql      => ['/usr/share/fts-mysql/fts-schema-9.0.0.sql'],
+            }
+          }
+          default: {
+            notify { "Unsupported Release: ${facts['os']['release']['major']}, database created AND using sql schema 8.0.1 from puppet": }
+            file {
+              default:
+                ensure => directory,
+                ;
+              '/usr/share':
+                ;
+              '/usr/share/fts-mysql':
+                ;
+            }
+            file { '/usr/share/fts-mysql/fts-schema-9.0.0.sql':
+              ensure  => file,
+              source  => 'puppet:///modules/fts/fts-schema-9.0.0.sql',
+              require => File['/usr/share/fts-mysql'],
+            }
+            mysql::db { $db_name:
+              ensure   => 'present',
+              user     => $fts_db_user,
+              grant    => ['ALL', 'SUPER'],
+              password => $fts_db_password,
+              name     => $db_name,
+              host     => $facts['networking']['ip'],
+              sql      => ['/usr/share/fts-mysql/fts-schema-9.0.0.sql'],
             }
           }
         }
@@ -189,9 +238,9 @@ class fts::database (
           '/usr/share/fts-mysql':
             ;
         }
-        file { '/usr/share/fts-mysql/fts-schema-8.2.0.sql':
+        file { '/usr/share/fts-mysql/fts-schema-9.0.0.sql':
           ensure  => file,
-          source  => 'puppet:///modules/fts/fts-schema-8.2.0.sql',
+          source  => 'puppet:///modules/fts/fts-schema-9.0.0.sql',
           require => File['/usr/share/fts-mysql'],
         }
         mysql::db { $db_name:
@@ -201,7 +250,7 @@ class fts::database (
           password => $fts_db_password,
           name     => $db_name,
           host     => $facts['networking']['ip'],
-          sql      => ['/usr/share/fts-mysql/fts-schema-8.2.0.sql'],
+          sql      => ['/usr/share/fts-mysql/fts-schema-9.0.0.sql'],
         }
       }
     }

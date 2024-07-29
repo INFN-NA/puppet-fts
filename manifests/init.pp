@@ -209,6 +209,11 @@ class fts (
               source => 'https://fts-repo.web.cern.ch/fts-repo/fts3-depend.repo',
               ;
           }
+          package { 'ca packages':
+            ensure   => present,
+            provider => dnf,
+            name     => ['ca-policy-lcg','fetch-crl'],
+          }
         }
         default: {
           # Actions to take for any OS release not explicitly mentioned
@@ -303,9 +308,9 @@ class fts (
   if $configure_lsc {
     notify { "Configuring VOMS VOs: ${vo_list}": }
     case $facts['os']['name'] {
-      'CentOS': {
+      'AlmaLinux': {
         case $facts['os']['release']['major'] {
-          '7': {
+          '9': {
             $vo_list.each |$vo| {
               case $vo {
                 'alice': {
@@ -375,9 +380,9 @@ class fts (
   if $configure_fts {
     notify { 'Configuring FTS3 Server': }
     case $facts['os']['name'] {
-      'CentOS': {
+      'AlmaLinux': {
         case $facts['os']['release']['major'] {
-          '7': {
+          '9': {
             # Install the FTS3 server
             class { 'fts::server':
               fts_user           => $fts_db_user,
