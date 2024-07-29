@@ -113,24 +113,6 @@ class fts::server (
       ;
   }
   include fts::client
-  file { '/etc/httpd/conf.d/fts3rest.conf':
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/fts/fts3rest.conf',
-    #require => [Package['fts-rest-server'], Package['httpd']],
-  }
-
-  file { '/etc/httpd/conf.d/ftsmon.conf':
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/fts/ftsmon.conf',
-    #require => [Package['fts-monitoring'], Package['httpd']],
-  }
-
 # Build the FTS tables remotely
   if $build_fts_tables {
     notify { "Building FTS tables on ${db_host}": }
