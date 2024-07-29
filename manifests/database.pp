@@ -305,41 +305,14 @@ class fts::database (
   # ------------------------------ Firewall ----------------------------- #
   if $configure_firewall {
     notify { 'Configuring Firewall': }
-    include firewall
-    firewall {
-      '00000 accept all icmp':
-        proto => 'icmp',
-        jump  => 'accept',
-        ;
-      '00001 accept all to lo interface':
-        proto   => 'all',
-        iniface => 'lo',
-        jump    => 'accept',
-        ;
-      '00002 reject local traffic not on loopback interface':
-        iniface     => '! lo',
-        proto       => 'all',
-        destination => '127.0.0.1/8',
-        jump        => 'reject',
-        ;
-      '00003 accept related established rules':
-        proto => 'all',
-        state => ['RELATED', 'ESTABLISHED'],
-        jump  => 'accept',
-        ;
-    }
-
-    firewall {
+    include firewalld
+    firewalld_port {
       '03306 MariaDB':
-        dport => 3306,
-        proto => 'tcp',
-        jump  => 'accept',
+        zone     => 'public',
+        port     => 3306,
+        protocol => 'tcp',
+        ;
     }
-    #firewall { '99999 drop all':
-    #  proto  => 'all',
-    #  jump   => 'drop',
-    #  before => undef,
-    #}
   }
   notify { 'FTS Database Configuration Complete': }
 }
