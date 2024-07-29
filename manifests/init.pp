@@ -213,7 +213,7 @@ class fts (
             default:
               ensure   => present,
               provider => dnf,
-              require  => [File['/etc/yum.repos.d/fts3-depend-el9.repo'], File['/etc/yum.repos.d/EGI-trustanchors.repo']],
+              require  => File['/etc/yum.repos.d/egi-trustanchors.repo'],
               ;
             ['ca-policy-lcg','fetch-crl']:
               ;
