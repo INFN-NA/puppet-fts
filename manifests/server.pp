@@ -102,11 +102,11 @@ class fts::server (
       ensure   => present,
       provider => dnf,
       ;
-    # Extras
+    # Message
     ['fts-msg']:
       ;
-    # SELinux rules
-    ['fts-server-selinux', 'fts-rest-server-selinux',]:
+    # Rest Server
+    ['fts-rest-server','fts-rest-server-selinux',]:
       ;
     # FTS Web Monitoring
     ['fts-monitoring']:
