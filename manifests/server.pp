@@ -111,9 +111,6 @@ class fts::server (
     # FTS Web Monitoring
     ['fts-monitoring']:
       ;
-    # FTS Rest Client
-    ['fts-rest-client']:
-      ;
   }
   include fts::client
   file { '/etc/httpd/conf.d/fts3rest.conf':
