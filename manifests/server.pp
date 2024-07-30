@@ -94,7 +94,7 @@ class fts::server (
       provider => dnf,
       ;
     # Core
-    ['fts-server', 'fts-mysql', 'fts-rest-client', 'fts-rest-server', 'fts-monitoring']:
+    ['fts-server', 'fts-mysql', 'fts-rest-server', 'fts-monitoring']:
       ;
     # Selinux
     ['fts-server-selinux', 'fts-rest-server-selinux', 'fts-monitoring-selinux']:
