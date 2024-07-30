@@ -217,7 +217,7 @@ class fts (
               install_options => ['--enablerepo=dmc-el9']
               ;
             # Gfal2 and dependencies
-            ['CGSI-gSOAP', 'davix', 'gfal2-all', 'srm-ifce']:
+            ['CGSI-gSOAP', 'davix', 'srm-ifce']:
               ;
           }
           package {
@@ -226,7 +226,7 @@ class fts (
               provider => dnf,
               require  => File['/etc/yum.repos.d/egi-trustanchors.repo'],
               ;
-            ['ca-policy-lcg','fetch-crl']:
+            ['fetch-crl', 'ca-policy-egi-core']:
               ;
           }
         }

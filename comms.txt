@@ -1,0 +1,45 @@
+dnf install epel-release
+dnf config-manager --set-enabled crb
+vim /etc/yum.repos.d/dmc-el9.repo
+
+[dmc-el9]
+name=DMC Production Repository
+baseurl=https://dmc-repo.web.cern.ch/dmc-repo/el9/$basearch
+gpgcheck=0
+enabled=1
+protect=0
+
+dnf install davix srm-ifce CGSI-gSOAP
+vim /etc/yum.repos.d/fts3-el9.repo
+
+[fts3-el9]
+name=FTS3 Production Repository
+baseurl=https://fts-repo.web.cern.ch/fts-repo/el9/$basearch
+gpgcheck=0
+enabled=1
+protect=0
+
+vim /etc/yum.repos.d/fts3-depend.repo
+
+[fts3-depend]
+name=FTS3 Dependencies
+baseurl=https://fts-repo.web.cern.ch/fts-repo/fts-depend/el$releasever/$basearch
+gpgcheck=0
+enabled=1
+protect=0
+
+dnf install fts-server fts-mysql fts-rest-client fts-rest-server fts-monitoring
+dnf install fts-server-selinux fts-rest-server-selinux fts-monitoring-selinux
+dnf install fts-msg
+
+vim /etc/yum.repos.d/egi-trustanchors.repo
+
+[EGI-trustanchors]
+name=EGI-trustanchors
+baseurl=http://repository.egi.eu/sw/production/cas/1/current/
+enabled=1
+gpgcheck=1
+gpgkey=http://repository.egi.eu/sw/production/cas/1/GPG-KEY-EUGridPMA-RPM-30
+
+dnf install fetch-crl
+fetch-crl -v 

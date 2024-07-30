@@ -87,29 +87,20 @@ class fts::server (
   class { 'apache::mod::ssl':
     ssl_cipher => "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384",
   }
-  package {
-    default:
-      ensure          => present,
-      provider        => dnf,
-      install_options => ['--enablerepo=crb']
-      ;
-    # Core Packages
-    ['fts-server','fts-server-selinux','fts-mysql']:
-      ;
-  }
+
   package {
     default:
       ensure   => present,
       provider => dnf,
       ;
-    # Message
+    # Core
+    ['fts-server', 'fts-mysql', 'fts-rest-client', 'fts-rest-server', 'fts-monitoring']:
+      ;
+    # Selinux
+    ['fts-server-selinux', 'fts-rest-server-selinux', 'fts-monitoring-selinux']:
+      ;
+    # FTS Message
     ['fts-msg']:
-      ;
-    # Rest Server
-    ['fts-rest-server','fts-rest-server-selinux',]:
-      ;
-    # FTS Web Monitoring
-    ['fts-monitoring']:
       ;
   }
   include fts::client
