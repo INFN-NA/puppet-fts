@@ -264,29 +264,4 @@ class fts::server (
     'fts-msg-bulk':
       ;
   }
-  notify { 'FTS server installed, please run fetch-crl - 99 and restart httpd': }
-  case $facts['os']['name'] {
-    'AlmaLinux': {
-      case $facts['os']['release']['major'] {
-        '9': {
-          exec { 'update-repo':
-            command => 'dnf makecache',
-            path    => ['/usr/bin', '/usr/sbin'],
-          }
-
-          package { ['ca-policy-egi-core', 'ca-certificates']:
-            ensure   => latest,
-            provider => 'dnf',
-          }
-
-          exec { 'reinstall-ca-policy-and-certificates':
-            command => 'dnf reinstall -y ca-policy-egi-core ca-certificates',
-            path    => ['/usr/bin', '/usr/sbin'],
-            onlyif  => 'rpm -q ca-policy-egi-core ca-certificates',
-            require => Package['ca-policy-egi-core', 'ca-certificates'],
-          }
-        }
-      }
-    }
-  }
 }
