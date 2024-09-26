@@ -229,10 +229,10 @@ class fts::server (
   }
 
   $fts_msg_settings_array = [
-    ['ACTIVE=*','ACTIVE=true'],
-    ['BROKER=*',"BROKER=${fts_broker_host}"],
-    ['PASSWORD=*',"PASSWORD=${fts_db_password}"],
-    ['USER=*',"USER=${fts_broker_user}"],
+    ['^ACTIVE=.*','ACTIVE=true'],
+    ['^BROKER=.*',"BROKER=${fts_broker_host}"],
+    ['^PASSWORD=.*',"PASSWORD=${fts_db_password}"],
+    ['^USERNAME=.*',"USERNAME=${fts_broker_user}"],  # Correct the key to match the config file ("USERNAME" instead of "USER")
   ]
 
   $fts_msg_settings_array.each |$iterate_array| {
