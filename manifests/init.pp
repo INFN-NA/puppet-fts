@@ -228,7 +228,7 @@ class fts (
               provider => dnf,
               require  => File['/etc/yum.repos.d/egi-trustanchors.repo'],
               ;
-            ['fetch-crl', 'ca-policy-egi-core', 'ca-certificates']:
+            ['fetch-crl', 'ca-policy-egi-core', 'ca-certificates', 'gridsite']:
               ;
           }
         }
