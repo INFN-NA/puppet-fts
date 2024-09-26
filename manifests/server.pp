@@ -244,6 +244,14 @@ class fts::server (
       line    => $iterate_array[1],
     }
   }
+  file { '/etc/httpd/conf.d/zgridsite.conf':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/fts/zgridsite.conf',
+    #require => [Package['fts-monitoring'], Package['httpd']],
+  }
 
   service {
     default:
