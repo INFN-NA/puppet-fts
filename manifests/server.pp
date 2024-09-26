@@ -258,9 +258,6 @@ class fts::server (
     'fts-qos':
       ;
 
-    'fetch-crl-cron':
-      ;
-
     'fts-msg-bulk':
       ;
   }
