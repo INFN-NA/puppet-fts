@@ -146,7 +146,6 @@ class fts::server (
   }
   if $configure_firewall {
     notify { 'Configuring firewall': }
-    include firewalld
     firewalld_port {
       '08446 REST API':
         ensure   => present,
