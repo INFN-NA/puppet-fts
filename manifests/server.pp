@@ -43,6 +43,15 @@
 #   (optional) The alias to use for the FTS server
 #   defaults to fts3-server.
 #
+# @param fts_broker_host
+#   (optional) The hostname or IP of the machine hosting the FTS broker.
+#   defaults to fts-broker.infn.it. This host must be accessible from the FTS server.
+#
+# @param fts_broker_user
+#   (optional) The user to connect to the FTS broker.
+#   defaults to ftsuser.
+#
+#
 # @param configure_firewall
 #   (optional) Whether to configure the firewall or not. 
 #   defaults to true. If set to false, the firewall must be configured manually.
@@ -69,11 +78,14 @@ class fts::server (
   String  $fts_db_password          = 'ftstestpassword',
   Integer $fts_db_threads_num       = 24,
   String  $fts_server_alias         = 'fts3-server',
+  String  $fts_broker_host          = 'fts-broker.infn.it',
+  String  $fts_broker_user          = 'ftsuser',
   Boolean $configure_firewall       = true,
   Boolean $configure_selinux        = true,
   Boolean $build_fts_tables         = true,
 ) {
   $fts_db_connect_string = "${db_host}:3306/${fts_db_name}"
+  $fts_broker_connect_string = "${fts_broker_host}:61613"
   include cron
   class { 'selinux':
     mode => 'enforcing',
@@ -170,6 +182,14 @@ class fts::server (
       command => '/etc/cron.daily/fts-record-publisher'
       ;
   }
+  cron { 'fetch-crl-and-restart-services':
+    ensure  => 'present',
+    command => '/usr/sbin/fetch-crl -p 99; /bin/systemctl restart httpd fts-*',
+    user    => 'root',
+    minute  => '0',
+    hour    => '3',
+  }
+
   $fts_settings_array = [
     ['User=*',"User=${fts_user}"],
     ['Group=*',"Group=${fts_user}"],
@@ -208,6 +228,23 @@ class fts::server (
     }
   }
 
+  $fts_msg_settings_array = [
+    ['ACTIVE=*','ACTIVE=true'],
+    ['BROKER=*',"BROKER=${fts_broker_host}"],
+    ['PASSWORD=*',"PASSWORD=${fts_db_password}"],
+    ['USER=*',"USER=${fts_broker_user}"],
+  ]
+
+  $fts_msg_settings_array.each |$iterate_array| {
+    file_line { $iterate_array[1]:
+      ensure  => 'present',
+      path    => '/etc/fts3/fts-msg-monitoring.conf',
+      require => Package['fts-msg'],
+      match   => $iterate_array[0],
+      line    => $iterate_array[1],
+    }
+  }
+
   service {
     default:
       ensure   => 'running',
@@ -228,4 +265,28 @@ class fts::server (
       ;
   }
   notify { 'FTS server installed, please run fetch-crl - 99 and restart httpd': }
+  case $facts['os']['name'] {
+    'AlmaLinux': {
+      case $facts['os']['release']['major'] {
+        '9': {
+          exec { 'update-repo':
+            command => 'dnf makecache',
+            path    => ['/usr/bin', '/usr/sbin'],
+          }
+
+          package { ['ca-policy-egi-core', 'ca-certificates']:
+            ensure   => latest,
+            provider => 'dnf',
+          }
+
+          exec { 'reinstall-ca-policy-and-certificates':
+            command => 'dnf reinstall -y ca-policy-egi-core ca-certificates',
+            path    => ['/usr/bin', '/usr/sbin'],
+            onlyif  => 'rpm -q ca-policy-egi-core ca-certificates',
+            require => Package['ca-policy-egi-core', 'ca-certificates'],
+          }
+        }
+      }
+    }
+  }
 }
