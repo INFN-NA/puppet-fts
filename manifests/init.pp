@@ -340,7 +340,7 @@ class fts (
                   include voms::cms
                 }
                 'cygno': {
-                  voms::vo { 'cygno.vo':
+                  voms::vo { 'cygno':
                     servers => [
                       {
                         server => 'voms-cygno.cloud.cnaf.infn.it',
@@ -352,12 +352,30 @@ class fts (
                   }
                 }
                 'datacloud': {
-                  voms::vo { 'datacloud.vo':
+                  voms::vo { 'datacloud':
                     servers => [
                       {
                         server => 'iam-aa.wp6.cloud.infn.it',
                         port   => 15000,
                         dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-aa.wp6.cloud.infn.it',
+                        ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+                      },
+                    ],
+                  }
+                }
+                'dampe': {
+                  voms::vo { 'vo.dampe.org':
+                    servers => [
+                      {
+                        server => 'voms-02.pd.infn.it',
+                        port   => 15000,
+                        dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-02.pd.infn.it',
+                        ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+                      },
+                      {
+                        server => 'voms2.cnaf.infn.it.lsc',
+                        port   => 15000,
+                        dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms2.cnaf.infn.it',
                         ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
                       },
                     ],
