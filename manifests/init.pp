@@ -393,6 +393,18 @@ class fts (
                 'ops': {
                   include voms::ops
                 }
+                'poc-icsc':{
+                  voms::vo { 'poc-icsc':
+                    servers => [
+                      {
+                        server => 'iam-poc-icsc.cloud.infn.it',
+                        port   => 15000,
+                        dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=iam-poc-icsc.cloud.infn.it',
+                        ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+                      },
+                    ],
+                  }
+                }
                 'wlcg': {
                   include voms::wlcg
                 }
