@@ -381,6 +381,18 @@ class fts (
                     ],
                   }
                 }
+                'darkside': {
+                  voms::vo { 'darkside':
+                    servers => [
+                      {
+                        server => 'iam-darkside.cloud.cnaf.infn.it',
+                        port   => 15000,
+                        dn     => '/DC=org/DC=terena/DC=tcs/C=IT/ST=Roma/O=Istituto Nazionale di Fisica Nucleare/CN=voms-darkside.cloud.cnaf.infn.it',
+                        ca_dn  => '/C=NL/O=GEANT Vereniging/CN=GEANT eScience SSL CA 4',
+                      },
+                    ],
+                  }
+                }
                 'dteam': {
                   include voms::dteam
                 }
